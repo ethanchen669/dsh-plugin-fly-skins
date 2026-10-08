@@ -90,6 +90,33 @@ lib/client.js             构建产物（`pnpm run build`，提交进仓库）
 - **只读 token 的断言会假绿**：token 解析对 ≠ 那层真的被画出来。改视觉要量**合成像素**
   （端到端那一组同时装两个包，见 `dsh-fly` 仓库的 `packages/dsh-plugin-fly-shell/scripts/verify-shell.mjs`）。
 
+## 这个包怎么被 `dsh-fly` 用
+
+本包不属于 `dsh-fly` 那个仓库的 `packages/`（它住在这里，就是这个仓库存在的理由：**改动以 PR 的
+单位进来**）。`dsh-fly` 通过它自己的 `plugins.lock.json` 认这个仓库：
+
+```jsonc
+// dsh-fly/plugins.lock.json
+{ "plugins": { "dsh-plugin-fly-skins": { "repo": "…", "version": "0.1.0", "path": "dsh-plugin-fly-skins", "sha": "…" } } }
+```
+
+| 那边做的事 | 走什么 |
+| --- | --- |
+| 找到本包 | `$FLY_PLUGINS_DIR`，缺省 `<dsh-fly 仓库的上一级>/dsh-plugins` —— 所以把本仓库 clone 到那儿，或设那个环境变量 |
+| 构建客户端半边 | `pnpm build:clients` 会连着本包一起重出（用同一份 builder），产出的 `lib/client.js` **提交在这个仓库里** |
+| 跑本包的门禁 | `unit skins` 组：`dsh-fly` 的 25 组门禁里那一组跑的就是本包的 `tests/` |
+| 打包 | 桌面版把本包一起打进 `fly-packages/`（DMG 里不缺它） |
+| 解析依赖 | 本仓库要自己 `pnpm install` 过：`dsh plugin add` 在 profile 里建的是软链，Node 从真实路径解析 |
+
+**两条你会踩到的规矩**：
+
+1. **改版本号要同步锁**：`package.json` 的 `version` 一动，`dsh-fly` 那边 `plugins.lock.json`
+   的对应值要一起改，否则它的门禁**开跑前**就退 4（带着本仓库的路径）。提交本身不用锁（锁里的
+   sha 只要是这个仓库 HEAD 的祖先就行 —— "领先锁"是 co-develop 的常态，那边会如实报出来）。
+2. **共享的构建件不许各自改**：`scripts/build-client.mjs` 与 `scripts/lib/client-src-hash.mjs`
+   在这两个仓库里必须**逐字节相同**（那边有一条断言盯着）。要动它们就两个仓库一起动，
+   否则会出现"本包按自己的口径构建、那边的守卫按自己的口径比"—— 症状是门禁全绿而屏幕上是旧皮肤。
+
 ## 许可证与来源
 
 [MIT](LICENSE)。本项目按 [CONTRIBUTING.md](CONTRIBUTING.md) 接受 PR —— 那里的三条规矩与
