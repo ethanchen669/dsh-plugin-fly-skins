@@ -1,0 +1,9 @@
+#!/bin/sh
+# 署名闸门（AGENTS.md §1.9 / 本仓 README「怎么被 dsh-fly 用」）：这一推送的每一笔，
+# 作者/提交者都不许是内网/公司身份 —— 看的是**真正要被推出去的元数据**，所以连 `--author=`
+# 这类显式覆盖、以及历史里已经存在的旧提交也一并拦住。
+#
+# 为什么这个仓库也要有一条：它的远端是公开的 GitHub；而 git 的署名只从 config 取，
+# 跟远端 URL 无关 —— 2026-10-08 这个仓的 4 笔提交就带着公司内网邮箱推了上去。
+# 本仓**故意不装**"推送审批"那条闸门（那是 dsh-fly 自己的规矩，社区贡献者不该被它挡住）。
+node "$(git rev-parse --show-toplevel)/scripts/check-commit-identity.mjs" --pushed || exit 1

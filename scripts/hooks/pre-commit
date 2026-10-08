@@ -1,0 +1,10 @@
+#!/bin/sh
+# 署名闸门（AGENTS.md §1.9）：这次提交会用谁的身份？命中内网/公司域就不许提交。
+#
+# 与 pre-push 的推送闸门是两回事：那条管「能不能推」，这条管「署名对不对」。
+# 两者都要过：署名不对的东西不该被造出来，更不该被推出去。
+#
+# 背景（2026-10-08）：git 的署名只从 config 取，跟 remote.origin.url 无关；本机全局身份
+# 曾是公司内网账号，于是 295 笔提交带着内网邮箱上了 GitHub —— 而门禁量的全是内容，
+# 没有任何一条尺子看得见提交元数据。这条是那把尺子。
+exec node "$(git rev-parse --show-toplevel)/scripts/check-commit-identity.mjs" --identity

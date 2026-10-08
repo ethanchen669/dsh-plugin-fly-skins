@@ -61,3 +61,15 @@ dsh plugin --profile=<你的测试 profile> add /绝对路径/dsh-plugin-fly-ski
 
 `scripts/build-client.mjs` 与 `scripts/lib/client-src-hash.mjs` 是 `dsh-fly` 里同名构建件与
 指纹实现的**逐字节副本**（monorepo 有一条断言盯着这两份不许各自漂移）—— 要改它们，请两边一起改。
+
+## 署名（提交的作者/提交者）
+
+**不要用公司/内网邮箱提交**（例如 `@xiaomi.com`）。这个仓库的远端是公开的 GitHub，
+而 git 的署名只从 config 取、跟远端 URL 无关 —— 一旦带上去就会永久留在提交历史里。
+
+- 本地兜底：`node scripts/install-hooks.mjs` 装钩子，署名不对时**提交**就会红。
+- CI 兜底：`node scripts/check-commit-identity.mjs --all`（每一笔都查；**钩子没装也拦得住**）。
+- 确实要用别的身份走一次：`DSH_FLY_IDENTITY_OK=1 <原命令>`（会大声警示并留痕）。
+
+注：**改写历史（强推）不等于删除** —— 旧对象在 GitHub 上仍可按 sha 取回（我们实测过），
+真要清干净得删仓重建或请 GitHub Support purge。所以这道门是「一开始就别进去」。
