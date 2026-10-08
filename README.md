@@ -1,4 +1,4 @@
-# dsh-plugin-fly-skins
+# @dsh-fly/dsh-plugin-fly-skins
 
 **Fly 的四套配色，作为一个标准的 DSH 皮肤插件。**
 
@@ -17,8 +17,8 @@ DeepSeek Harness Web UI 的皮肤插件：`ctx.theme.overrideTokens()` 覆写官
 ## 安装
 
 ```bash
-dsh plugin --profile=<profile> add dsh-plugin-fly-skins        # npm registry
-dsh plugin --profile=<profile> add ./dsh-plugin-fly-skins-0.1.0.tgz  # tarball
+dsh plugin --profile=<profile> add @dsh-fly/dsh-plugin-fly-skins        # npm registry
+dsh plugin --profile=<profile> add ./dsh-fly-dsh-plugin-fly-skins-0.1.0.tgz  # tarball
 ```
 
 在 Harness Web 的**侧栏 → Plugins** 页里也能装（同一个 `plugin_manager`）。装完**重启**
@@ -55,7 +55,7 @@ dsh plugin --profile=<profile> add ./dsh-plugin-fly-skins-0.1.0.tgz  # tarball
 - `palette()`：当前配色 id。
 
 宿主行（`dsh-plugin-fly-shell`）按**可选服务**读它（`ctx.get('flySkins')`，不 `inject`）：
-皮肤没装时它照常渲染，只是卡片改说「皮肤由 dsh-plugin-fly-skins 提供」。别把这条读法改成
+皮肤没装时它照常渲染，只是卡片改说「皮肤由 @dsh-fly/dsh-plugin-fly-skins 提供」。别把这条读法改成
 `inject`：那会让"只装工作台"的 profile 直接挂不上。
 
 ## 开发
@@ -79,7 +79,7 @@ dsh plugin --profile=<你的测试 profile> add /绝对路径/dsh-plugin-fly-ski
 
 ```
 index.js                  host 半边：Config{skin}（volatile）+ 开机引导（全局 + head script）
-cordis.patch.yml          Loader 行（- insert: [{id: fly-skins, name: dsh-plugin-fly-skins}]）
+cordis.patch.yml          Loader 行（- insert: [{id: fly-skins, name: '@dsh-fly/dsh-plugin-fly-skins'}]）
 src/client/tokens.ts      四套配色的 token 表 + paletteOverrides()
 src/client/styles.ts      FLY_CSS：重画官方 UI 的 chrome 配方（按 data-fly-palette 作用域）
 src/client/index.tsx      client 半边：覆写层、样式表、设置行、flySkins 服务
@@ -110,7 +110,7 @@ lib/client.js             构建产物（`pnpm run build`，提交进仓库）
 
 ```jsonc
 // dsh-fly/plugins.lock.json
-{ "plugins": { "dsh-plugin-fly-skins": { "repo": "…", "version": "0.1.0", "path": "dsh-plugin-fly-skins", "sha": "…" } } }
+{ "plugins": { "@dsh-fly/dsh-plugin-fly-skins": { "repo": "…", "version": "0.1.0", "path": "dsh-plugin-fly-skins", "sha": "…" } } }
 ```
 
 | 那边做的事 | 走什么 |
@@ -140,13 +140,18 @@ npm publish            # publishConfig 已把 registry 钉在公开 npm 上
 
 - **`publishConfig.registry` 是必须的**：本机与公司环境的 npm 默认 registry 可能是内网镜像，
   少了它 `npm publish` 会朝镜像发 —— 发不出去还算好，真发出去了更糟。
-- 包名 `dsh-plugin-fly-skins` 目前**未被占用**（实测公开 npm 返回 404）。不带 scope 的名字
-  `npm publish` 默认就是公开包；将来若改成 scoped 名字（`@you/dsh-plugin-fly-skins`），
-  要再加 `"access": "public"`。
+- 包名带 scope：`@dsh-fly/dsh-plugin-fly-skins`，scope 由 npm 组织 `dsh-fly` 拥有
+  （**发布前先在 npm 上建好这个 org**）。`package.json` 里已有 `"publishConfig": {"access": "public"}`。
+- **为什么要 scope**（2026-10-08 决定）：granular token 的 "Select packages" **只能挑已存在的包**，
+  所以"一个 token 覆盖将来才建的兄弟插件"只能靠 `--scopes dsh-fly` 授权 —— 而 scope 授权的前提
+  是包名真的在 scope 下。npm **不允许给已发布的包改名**，所以这个决定必须在第一次发布之前做。
+- **第一次发布别用"限定到具体包"的 granular token**：那孩子只能选包，而全新包恰恰还不存在。
+  用 `npm login`（或 `All packages` 的 granular / classic Automation token）先把名字占下来；
+  存在之后再收紧到 `--packages @dsh-fly/dsh-plugin-fly-skins` 或 `--scopes dsh-fly` 交给 CI。
 - 版本号一动，**同步 `dsh-fly` 的 `plugins.lock.json`**（那边门禁开跑前会核对，对不上直接退 4）。
-- 发完拿 scratch profile 验一次真实安装：`dsh plugin --profile=<测试 profile> add dsh-plugin-fly-skins`。
+- 发完拿 scratch profile 验一次真实安装：`dsh plugin --profile=<测试 profile> add @dsh-fly/dsh-plugin-fly-skins`。
 
-发布出去以后，社区有三条消费路径，按需要选：**npm registry**（`dsh plugin add dsh-plugin-fly-skins`）、
+发布出去以后，社区有三条消费路径，按需要选：**npm registry**（`dsh plugin add @dsh-fly/dsh-plugin-fly-skins`）、
 **tarball**（`npm pack` 出来的 `.tgz`，离线/内网可用）、**兄弟仓**（clone 到 `dsh-fly` 上一级的
 `dsh-plugins/`，那边按 `plugins.lock.json` 解析 —— dsh-fly 自己走的就是这条）。
 

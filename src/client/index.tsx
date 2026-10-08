@@ -146,10 +146,10 @@ const LOCALE_NS = 'fly.settings'
 const FLY_SKINS_GLOBAL = '__FLY_SKINS__'
 
 /** Override-layer identity: one layer per source, and it names the origin for inspection. */
-const OVERRIDE_SOURCE = 'dsh-plugin-fly-skins'
+const OVERRIDE_SOURCE = '@dsh-fly/dsh-plugin-fly-skins'
 
 /** Marker so a second activation (HMR) does not stack a duplicate stylesheet. */
-const STYLE_TAG = 'dsh-plugin-fly-skins'
+const STYLE_TAG = '@dsh-fly/dsh-plugin-fly-skins'
 
 /** Locale ids this build ships copy for. */
 type LocaleId = 'zh' | 'en'

@@ -12,7 +12,7 @@
  * bundle may require nothing else, and the primitive's `id`/`value`/`options`/
  * `onChange`/`label` faces are what the row uses.
  *
- * Run: node --test packages/dsh-plugin-fly-skins/tests/*.spec.mjs
+ * Run: node --test packages/@dsh-fly\/dsh-plugin-fly-skins/tests/*.spec.mjs
  */
 
 import assert from 'node:assert/strict'

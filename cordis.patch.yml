@@ -1,4 +1,4 @@
-# dsh-plugin-fly-skins bundle patch.
+# @dsh-fly/dsh-plugin-fly-skins bundle patch.
 #
 # This file is the package's substance: `dsh.bundle.patch` in package.json points
 # here, and the profile composer applies this list over the entries the earlier
@@ -20,4 +20,4 @@
 
 - insert:
     - id: fly-skins
-      name: dsh-plugin-fly-skins
+      name: '@dsh-fly/dsh-plugin-fly-skins'

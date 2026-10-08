@@ -8,7 +8,7 @@
  * `window.__ModuleLoader__`, and the plugin's `apply` runs against a recording
  * context, so the registrations asserted here are the ones the skin performs.
  *
- * Run: node --test packages/dsh-plugin-fly-skins/tests/*.spec.mjs
+ * Run: node --test tests/*.spec.mjs
  */
 
 import assert from 'node:assert/strict'
@@ -234,11 +234,23 @@ test('manifest declares both faces of the plugin', () => {
     'the host Config schema import must be a declared peer')
 })
 
+test('包的 name 与 Loader 行里的 name 逐字一致（否则 profile 装得上但组合不上）', () => {
+  const patch = readFileSync(join(packageRoot, manifest.dsh.bundle.patch), 'utf8')
+  assert.equal(manifest.name, '@dsh-fly/dsh-plugin-fly-skins')
+  // `@` 开头的标量在 YAML 里是保留指示符：必须加引号，否则装载器报
+  // "bad indentation of a mapping entry" —— 而只 grep 文本的断言看不见这件事
+  // （2026-10-08 由 verify-diagnostics 真装载时才抓到）。
+  const quoted = patch.includes(`name: '${manifest.name}'`) || patch.includes(`name: "${manifest.name}"`)
+  assert.ok(quoted, `Loader 行必须写成 name: '${manifest.name}'（@ 开头在 YAML 里是保留指示符）`)
+  // 反面：双重前缀这种手滑（改名脚本跑两遍）要当场红，而不是让组合层静默少一行
+  assert.equal(manifest.name.includes('@dsh-fly/@dsh-fly'), false)
+})
+
 test('the bundle patch contributes exactly one loader row', () => {
   const patch = readFileSync(join(packageRoot, manifest.dsh.bundle.patch), 'utf8')
   assert.match(patch, /^- insert:/mu)
   assert.match(patch, /id: fly-skins/u)
-  assert.match(patch, /name: dsh-plugin-fly-skins/u)
+  assert.match(patch, /name: '@dsh-fly\/dsh-plugin-fly-skins'/u)
   assert.equal(patch.match(/^ {4}- id:/gmu)?.length, 1)
 })
 
@@ -452,7 +464,7 @@ test('the built bundle loads through the loader contract and registers its seats
   }
 
   const tokens = first.registrations.find(entry => entry.kind === 'tokens')
-  assert.equal(tokens.source, 'dsh-plugin-fly-skins')
+  assert.equal(tokens.source, '@dsh-fly/dsh-plugin-fly-skins')
   const names = Object.keys(tokens.tokens)
   assert.ok(names.length >= 43, `expected the full skin, saw ${names.length} tokens`)
   for (const name of names) {
@@ -545,7 +557,7 @@ test('the built bundle loads through the loader contract and registers its seats
     copy.apply(sweep.ctx)
 
     const booted = sweep.registrations.find(entry => entry.kind === 'tokens')
-    assert.equal(booted.source, 'dsh-plugin-fly-skins')
+    assert.equal(booted.source, '@dsh-fly/dsh-plugin-fly-skins')
     assert.equal(Object.keys(booted.tokens).length, names.length, `${palette.id} must paint the same token set`)
     assert.equal(globalThis.document.documentElement.dataset.flyPalette, palette.id,
       `${palette.id} must be on <html> from the first effect`)
@@ -654,7 +666,7 @@ test('a runtime without the picker services still gets the skin', async () => {
   assert.equal(globalThis.document.documentElement.dataset.flyPalette, 'glass',
     'the boot palette still reaches <html> without the settings services')
   const layer = registrations.find(entry => entry.kind === 'tokens')
-  assert.equal(layer.source, 'dsh-plugin-fly-skins')
+  assert.equal(layer.source, '@dsh-fly/dsh-plugin-fly-skins')
   assert.equal(layer.tokens['--dsw-alias-brand-primary'].dark, '#ffb020')
   // The service is published anyway — the workbench needs it more than the
   // picker does, and both are optional extras on top of the token layer.

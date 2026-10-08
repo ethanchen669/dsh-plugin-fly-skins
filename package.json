@@ -1,10 +1,11 @@
 {
-  "name": "dsh-plugin-fly-skins",
+  "name": "@dsh-fly/dsh-plugin-fly-skins",
   "version": "0.1.0",
   "description": "DSH Fly skins: the four Fly palettes (solid / glass / volume / neon) as a standalone DSH bundle + client plugin — token layer, chrome rules, Settings row",
   "license": "MIT",
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
   },
   "type": "module",
   "main": "index.js",
@@ -28,11 +29,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ethanchen669/dsh-plugin-fly-skins.git"
+    "url": "git+https://github.com/ethanchen669/@dsh-fly/dsh-plugin-fly-skins.git"
   },
-  "homepage": "https://github.com/ethanchen669/dsh-plugin-fly-skins#readme",
+  "homepage": "https://github.com/ethanchen669/@dsh-fly/dsh-plugin-fly-skins#readme",
   "bugs": {
-    "url": "https://github.com/ethanchen669/dsh-plugin-fly-skins/issues"
+    "url": "https://github.com/ethanchen669/@dsh-fly/dsh-plugin-fly-skins/issues"
   },
   "meta": {
     "title": "FLY Skins",
