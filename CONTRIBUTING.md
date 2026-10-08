@@ -7,7 +7,7 @@
 ```bash
 git clone https://github.com/ethanchen669/dsh-plugin-fly-skins
 cd dsh-plugin-fly-skins
-pnpm install          # npm install 也可以
+pnpm install          # npm install 也可以（已实测：装完能跑通 pnpm run verify；CI 只跑 pnpm）
 pnpm run verify       # = build + typecheck + test，提交前请让它全绿
 ```
 
