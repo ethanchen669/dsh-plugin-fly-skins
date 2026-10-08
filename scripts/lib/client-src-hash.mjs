@@ -5,6 +5,11 @@
  * banner，守卫（`scripts/tests/client-freshness.spec.mjs`）拿它跟当前的 `src/` 比。
  * 两处只要有一处自己算，就会出现"守卫说最新、屏幕上是旧皮肤"的自欺。
  *
+ * 它还是**跨仓库共享件**：外部插件（各自仓库，见 `plugins.lock.json`）里有一份逐字节
+ * 相同的副本，`scripts/tests/plugin-lock.spec.mjs` 盯着两份不许漂移。所以这里只放
+ * "与仓库布局无关"的东西 —— 哪些包要构建/受检是**本仓**的事，住
+ * `scripts/lib/plugin-sources.mjs`。
+ *
  * 为什么用**内容指纹**而不是 mtime：mtime 在 `git clone` / `git checkout` / `git stash`
  * 之后会集体变新，于是守卫把每次新鲜检出都喊成"陈旧"（狼来了），而真正的陈旧反而被
  * 淹没。指纹跟着内容走，检出是自洽的：`src/` 与 `lib/client.js` 一起被还原，两边依旧
@@ -48,7 +53,7 @@ export function clientSourceFiles(packageRoot) {
 }
 
 /**
- * 源码指纹：对 `src/` 下每个文件的 `<相对路径>\\0<内容>\\0` 取 sha256。
+ * 源码指纹：对 `src/` 下每个文件的 `<相对路径>\0<内容>\0` 取 sha256。
  *
  * @param packageRoot - 包目录（绝对路径）。
  * @returns 64 位十六进制。
@@ -74,22 +79,4 @@ export function clientSrcHash(packageRoot) {
 export function readSrcHashFromBundle(bundleFile) {
   const match = SRC_HASH_PATTERN.exec(readFileSync(bundleFile, 'utf8'))
   return match === null ? null : match[1]
-}
-
-/**
- * `pnpm build:clients` 到底构建哪些包 —— **从 package.json 里读**，不另立一份清单。
- *
- * 守卫必须盯的和那条命令构建的必须是同一批；手抄一份清单，就会在"给 build:clients
- * 加了新包"之后留下一个永远不被检查的包（而它的失败形状正是静默陈旧）。
- *
- * @param repoRoot - 仓库根（绝对路径）。
- * @returns 包目录绝对路径数组。
- */
-export function buildClientPackages(repoRoot) {
-  const manifest = JSON.parse(readFileSync(join(repoRoot, 'package.json'), 'utf8'))
-  const command = manifest?.scripts?.['build:clients']
-  if (typeof command !== 'string') throw new Error('package.json 里没有 build:clients 脚本')
-  const dirs = command.split(/\s+/).filter(part => part.startsWith('packages/'))
-  if (dirs.length === 0) throw new Error(`build:clients 里没解析出包目录：${command}`)
-  return dirs.map(dir => join(repoRoot, dir))
 }
