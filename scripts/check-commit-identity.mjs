@@ -70,19 +70,23 @@ function pushedCommits() {
   } catch {
     input = ''
   }
-  const shas = new Set()
+  // 范围就用 pre-push 亲手交给我们的那对 sha：`<remote sha>..<local sha>`。
+  //
+  // 别用 `--not --remotes`（第一版就是那么写的，被自己的日志抓出来）：本地的
+  // remote-tracking 引用**可能陈旧** —— 刚把远端重建/强推过、或者别人 rebase 过，
+  // 它仍指着远端已经没有的旧提交，于是"要推的东西"被算成 0 笔，闸门静默放过一整段历史。
+  // 那正是它最该说话的场景（重写历史后强推）。
+  const ranges = new Set()
   for (const line of input.split('\n')) {
     const parts = line.trim().split(/\s+/u)
     if (parts.length < 4) continue
-    const localSha = parts[1]
+    const [, localSha, , remoteSha] = parts
     if (localSha === ZERO_SHA) continue // 删除分支：没有提交要推
-    shas.add(localSha)
+    // 远端那个 sha 是 40 个 0 = 新分支，它的**全部**历史都要查。
+    ranges.add(remoteSha === ZERO_SHA ? localSha : `${remoteSha}..${localSha}`)
   }
   const found = []
-  for (const sha of shas) {
-    // `--not --remotes` = 远端还没有的那些提交（新分支时就是它的全部历史）。
-    found.push(...readCommits([sha, '--not', '--remotes', '--topo-order']))
-  }
+  for (const range of ranges) found.push(...readCommits([range, '--topo-order']))
   return found
 }
 
