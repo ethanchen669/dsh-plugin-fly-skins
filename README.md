@@ -27,6 +27,19 @@ dsh plugin --profile=<profile> add ./dsh-plugin-fly-skins-0.1.0.tgz  # tarball
 包声明 `dsh.bundle` + `dsh.client`：host 半边贡献一个 Loader 行与开机引导（`__FLY_SKINS__`
 全局 + head script），client 半边贡献 token 覆写层、样式表与设置行。
 
+## 运行环境与版本
+
+| 项 | 值 | 说明 |
+| --- | --- | --- |
+| Harness 引擎 | **`@deepseek-ai/dsh@0.2.0-rc.2`** | 本包在这个版本上验收：`dsh-fly` 的 25 组门禁里 `unit skins` 与 `verify shell`（702 条断言）跑的就是它。引擎**不在依赖里** —— loader 在运行时供给 |
+| Node | ≥ 20 | 见 `engines.node` |
+| `@deepseek-ai/schemastery` | `^3.18.4`（peer） | host 半边用它声明配置 schema；**在公开 npm 上**（实测 `3.18.4`），`dsh plugin add` 会装它 |
+| `@deepseek-ai/dsh-client-*` | 由 loader 供给 | 客户端半边的平台模块（locale / settings / theme / ui-primitives）不进依赖；类型面在 `src/client/platform.d.ts` 里自己声明 |
+
+本包单跑 `pnpm run verify` **不需要引擎**：它的测试自带契约夹具（manifest、loader 行、host 半边、
+构建产物指纹）。只有"皮肤在真窗口里画出来了吗"那一层要在 `dsh-fly` 里对着真引擎量 —— 上游改名或大版本
+升级时，那边的 `probe:upstream` 会先把候选引擎装到仓库外、跑满门禁再出红表（见其 `docs/upstream-tracking.md`）。
+
 ## 两个契约
 
 **开机标记。** 皮肤在 `<html>` 上写 `data-fly-palette="<id>"`（`documentElement.dataset.flyPalette`），
@@ -116,6 +129,26 @@ lib/client.js             构建产物（`pnpm run build`，提交进仓库）
 2. **共享的构建件不许各自改**：`scripts/build-client.mjs` 与 `scripts/lib/client-src-hash.mjs`
    在这两个仓库里必须**逐字节相同**（那边有一条断言盯着）。要动它们就两个仓库一起动，
    否则会出现"本包按自己的口径构建、那边的守卫按自己的口径比"—— 症状是门禁全绿而屏幕上是旧皮肤。
+
+## 发布（维护者）
+
+```bash
+pnpm run verify        # 先绿（构建 + tsc + 全部测试）
+npm login --registry=https://registry.npmjs.org/    # 首次；CI 里用 NPM_TOKEN
+npm publish            # publishConfig 已把 registry 钉在公开 npm 上
+```
+
+- **`publishConfig.registry` 是必须的**：本机与公司环境的 npm 默认 registry 可能是内网镜像，
+  少了它 `npm publish` 会朝镜像发 —— 发不出去还算好，真发出去了更糟。
+- 包名 `dsh-plugin-fly-skins` 目前**未被占用**（实测公开 npm 返回 404）。不带 scope 的名字
+  `npm publish` 默认就是公开包；将来若改成 scoped 名字（`@you/dsh-plugin-fly-skins`），
+  要再加 `"access": "public"`。
+- 版本号一动，**同步 `dsh-fly` 的 `plugins.lock.json`**（那边门禁开跑前会核对，对不上直接退 4）。
+- 发完拿 scratch profile 验一次真实安装：`dsh plugin --profile=<测试 profile> add dsh-plugin-fly-skins`。
+
+发布出去以后，社区有三条消费路径，按需要选：**npm registry**（`dsh plugin add dsh-plugin-fly-skins`）、
+**tarball**（`npm pack` 出来的 `.tgz`，离线/内网可用）、**兄弟仓**（clone 到 `dsh-fly` 上一级的
+`dsh-plugins/`，那边按 `plugins.lock.json` 解析 —— dsh-fly 自己走的就是这条）。
 
 ## 许可证与来源
 
