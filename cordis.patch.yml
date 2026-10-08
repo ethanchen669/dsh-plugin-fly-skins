@@ -1,0 +1,23 @@
+# dsh-plugin-fly-skins bundle patch.
+#
+# This file is the package's substance: `dsh.bundle.patch` in package.json points
+# here, and the profile composer applies this list over the entries the earlier
+# bundle layers already inserted (an ordered insert over the empty profile root).
+# A later layer — the profile's own cordis.patch.yml or a `--patch` overlay — can
+# address `fly-skins` by id to reconfigure or disable it.
+#
+# One row only, and it binds no host service: its job is to be an *enabled Loader
+# entry* whose package carries `dsh.client`, because the browser boot graph is
+# composed by scanning enabled entries for that field. The host half publishes the
+# settings form and the boot rows (the page global and the head script that stamps
+# `data-fly-palette` before the first app frame); everything else is the browser
+# half.
+#
+# The row is deliberately separate from `fly-shell` (the workbench): this package
+# is the neutral, publishable skin, and the shell keeps Fly's own surfaces. A
+# profile that wants the Fly look installs this row; the workbench then reads it
+# as the optional `flySkins` service.
+
+- insert:
+    - id: fly-skins
+      name: dsh-plugin-fly-skins

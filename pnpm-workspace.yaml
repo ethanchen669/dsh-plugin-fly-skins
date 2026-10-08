@@ -1,0 +1,6 @@
+# pnpm 11 起，安装策略也放在这个文件里（`package.json` 的 `pnpm.*` 字段已不再被读取）。
+#
+# esbuild 的 postinstall 用来安置它的平台二进制 —— vite 的构建依赖它。
+# 这是本仓库唯一需要跑构建脚本的依赖；其余一律显式拒绝，别让"默认允许"悄悄进来。
+allowBuilds:
+  esbuild: true

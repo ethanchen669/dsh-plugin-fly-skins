@@ -1,0 +1,27 @@
+name: ci
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['20', '22']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      # pnpm 只是这里的安装器；npm install 同样可行（见 CONTRIBUTING）。
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+      - run: pnpm install --frozen-lockfile=false
+      # 构建产物 `lib/client.js` 是提交进仓库的：这条命令同时验证"它能被重新构建出来"
+      # 与"当前提交进去的那份就是用当前 src/ 构建的"（tests/freshness.spec.mjs）。
+      - run: pnpm run verify
