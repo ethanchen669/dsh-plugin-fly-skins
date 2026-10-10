@@ -16,17 +16,22 @@ DeepSeek Harness Web UI 的皮肤插件：`ctx.theme.overrideTokens()` 覆写官
 
 ## 四套配色（真机截图）
 
-会话的步骤链展开后（思考 / 运行命令 / 写入 `hello.py` +26 −0 / 代码块）：
+会话里**任务列表（todo）正在跑**时的样子 —— 顶部是任务摘要行（可展开成整条步骤链），
+底部那块发光蓝的卡片就是任务列表本身（已完成 / 进行中 / 待处理三种状态都在）：
 
-| 霓虹 Neon | 体积 Volume |
+| 实心 Solid | 玻璃 Glass |
 | --- | --- |
-| ![霓虹](docs/shots/conversation-neon-dark.jpg) | ![体积](docs/shots/conversation-volume-dark.jpg) |
-| **玻璃 Glass** | **实心 Solid** |
-| ![玻璃](docs/shots/conversation-glass-dark.jpg) | ![实心](docs/shots/conversation-solid-dark.jpg) |
+| ![实心](docs/shots/conversation-solid-dark.jpg) | ![玻璃](docs/shots/conversation-glass-dark.jpg) |
+| **玻璃2 Volume** | **霓虹 Neon** |
+| ![玻璃2](docs/shots/conversation-volume-dark.jpg) | ![霓虹](docs/shots/conversation-neon-dark.jpg) |
 
-四套配色各有明暗两半，上面都是暗色那一半。截图都是**官方 UI 里跑着本包时的实拍**
-（真引擎 + 真浏览器，1440 宽 @DPR 2）。
+设置弹窗（霓虹配色，暗色 / 浅色两半）：
 
+| 暗色 | 浅色 |
+| --- | --- |
+| ![设置 · 暗色](docs/shots/settings-neon-dark.jpg) | ![设置 · 浅色](docs/shots/settings-neon-light.jpg) |
+
+全部是**官方 UI 里跑着本包时的实拍**（真引擎 + 真浏览器，1440 宽 @DPR 2）。
 ## 安装
 
 ```bash
