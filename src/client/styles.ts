@@ -1218,4 +1218,38 @@ html[data-fly-palette='glass'] body:not([data-ds-dark-theme]) [class*='_preview'
 html[data-fly-palette='volume'] body:not([data-ds-dark-theme]) [class*='_preview']:has([data-changes-hover-preview])  {
   background-color: rgba(250, 251, 253, 0.96);
 }
+
+/* ---------------------------------------------------------------------------
+ * The skin's own Settings row must stand alone.
+ *
+ * This package registers the Settings row itself (see the React element in
+ * index.tsx: .fly-skin-row / .fly-skin-title / .fly-skin-hint). Under dsh-fly the
+ * shell stylesheet also carries these three classes, so the row looked right --
+ * which hid a real defect: a community install gets this package ONLY (the
+ * official web UI and the official desktop app never load the shell), and then
+ * nothing at all styled the row. Measured symptom (user report, 2026-10-11): the
+ * hint under the palette control rendered at the document default size -- huge --
+ * while the same row inside dsh-fly was normal.
+ *
+ * So the values below are copied verbatim from the shell's rules (title 13px/600,
+ * hint 12px/1.5). Identical values on purpose: with both stylesheets present the
+ * cascade cannot matter, and a standalone install now matches the Fly instance
+ * exactly instead of approximating it.
+ * ------------------------------------------------------------------------- */
+.fly-skin-row  {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.fly-skin-title  {
+  color: var(--dsw-alias-label-primary, #e8eef7);
+  font-size: 13px;
+  font-weight: 600;
+}
+.fly-skin-hint  {
+  color: var(--dsw-alias-label-secondary, #8b9bb4);
+  font-size: 12px;
+  line-height: 1.5;
+}
 `

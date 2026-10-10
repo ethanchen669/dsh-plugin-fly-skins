@@ -610,9 +610,30 @@ test('the skin sheet carries the chrome and never the workbench', () => {
   // alone, and would tie the skin to the shell's window chrome.
   assert.equal(template.includes('data-fly-shell'), false,
     'the window-chrome marker belongs to dsh-plugin-fly-shell')
-  for (const workbench of ['.fly-panel', '.fly-card', '.fly-chip', '.fly-kv', '.fly-skin-row']) {
+  // The blacklist is deliberately about surfaces this package does NOT render.
+  // `.fly-skin-row` used to be listed here, and that was wrong: the skin draws its
+  // own Settings row (index.tsx) with `.fly-skin-row/.fly-skin-title/.fly-skin-hint`,
+  // so under dsh-fly the SHELL stylesheet was the only thing sizing it. A community
+  // install gets this package alone -> nothing styled the row -> the hint rendered at
+  // the document default size (user report 2026-10-11: normal inside Fly, huge in the
+  // official web UI and the official desktop app). The shell's rules are now copied
+  // into this package, so the class is allowed here -- but only because the skin
+  // renders it, which the assertion below enforces directly.
+  for (const workbench of ['.fly-panel', '.fly-card', '.fly-chip', '.fly-kv']) {
     assert.equal(template.includes(workbench), false,
       `${workbench} belongs to dsh-plugin-fly-shell: this package must stay publishable alone`)
+  }
+
+  // The property the blacklist was only a proxy for: every `fly-*` class this
+  // package RENDERS must be styled by this package too. Anything left unstyled here
+  // is a surface that only looks right while the shell is installed -- i.e. exactly
+  // the bug above. The floor (3) keeps a rename from turning this into a no-op.
+  const rendered = [...readFileSync(join(packageRoot, 'src/client/index.tsx'), 'utf8')
+    .matchAll(/className:\s*'([^']+)'/gu)].map(m => m[1])
+  assert.ok(rendered.length >= 3, `expected the Settings row markup to name at least 3 classes, got ${rendered.length}`)
+  for (const cls of rendered) {
+    assert.ok(template.includes('.' + cls),
+      `this package renders .${cls} but never styles it: standalone installs would fall back to the document default`)
   }
 })
 
