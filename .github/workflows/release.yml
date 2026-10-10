@@ -36,8 +36,9 @@ jobs:
       - name: 发布前先跑本仓门禁（构建 + tsc + 全部测试）
         run: pnpm run verify
       - name: 全历史署名检查（内网身份一律拦下）
-        run: node scripts/check-commit-identity.mjs --all || true
+          # 原先写着 `|| true` —— 那等于"署名脏了也照发"，正是这道门要拦的事，去掉。
+          run: node scripts/check-commit-identity.mjs --all
       - name: 发布到公开 npm（OIDC，无需 token）
-        # --provenance 需要公开仓库；本仓当前是 private ⇒ 先不加。
-        # 转 public 之后可以把下面这行换成：npm publish --access public --provenance
-        run: npm publish --access public
+          # 本仓已转 public ⇒ 打开 --provenance：npm 页面上会给这一版标一条"可验证的出处"
+          # （哪个仓库、哪个 commit、哪条 workflow 发出来的），社区可以自己核。
+          run: npm publish --access public --provenance

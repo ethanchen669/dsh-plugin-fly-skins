@@ -1,7 +1,7 @@
 {
   "name": "@dsh-fly/dsh-plugin-fly-skins",
-  "version": "0.1.0",
-  "description": "DSH Fly skins: the four Fly palettes (solid / glass / volume / neon) as a standalone DSH bundle + client plugin — token layer, chrome rules, Settings row",
+  "version": "0.1.1",
+  "description": "DSH Fly skins: the four Fly palettes (solid / glass / volume / neon) as a standalone DSH bundle + client plugin \u2014 token layer, chrome rules, Settings row",
   "license": "MIT",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -37,7 +37,7 @@
   },
   "meta": {
     "title": "FLY Skins",
-    "description": "四套配色（实心 / 玻璃 / 玻璃2 / 霓虹）× 明暗，重画官方 UI 的 chrome；在「设置 → 通用」里选。"
+    "description": "\u56db\u5957\u914d\u8272\uff08\u5b9e\u5fc3 / \u73bb\u7483 / \u73bb\u74832 / \u9713\u8679\uff09\u00d7 \u660e\u6697\uff0c\u91cd\u753b\u5b98\u65b9 UI \u7684 chrome\uff1b\u5728\u300c\u8bbe\u7f6e \u2192 \u901a\u7528\u300d\u91cc\u9009\u3002"
   },
   "peerDependencies": {
     "@deepseek-ai/schemastery": "^3.18.4"
