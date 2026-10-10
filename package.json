@@ -29,11 +29,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ethanchen669/@dsh-fly/dsh-plugin-fly-skins.git"
+    "url": "git+https://github.com/ethanchen669/dsh-plugin-fly-skins.git"
   },
-  "homepage": "https://github.com/ethanchen669/@dsh-fly/dsh-plugin-fly-skins#readme",
+  "homepage": "https://github.com/ethanchen669/dsh-plugin-fly-skins#readme",
   "bugs": {
-    "url": "https://github.com/ethanchen669/@dsh-fly/dsh-plugin-fly-skins/issues"
+    "url": "https://github.com/ethanchen669/dsh-plugin-fly-skins/issues"
   },
   "meta": {
     "title": "FLY Skins",
