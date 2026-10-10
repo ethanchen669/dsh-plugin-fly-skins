@@ -14,7 +14,24 @@ DeepSeek Harness Web UI 的皮肤插件：`ctx.theme.overrideTokens()` 覆写官
 
 每套都有明暗两半，选择持久化在 profile 的 patch 层（字段 `skin`）。
 
-> 四套配色的**真机截图**（暗色，官方 UI 内实拍）见 [`docs/shots/gallery.md`](docs/shots/gallery.md) —— 那是给本页准备的画廊：本仓转 public 后把那段表格并入这里（私有期间贴上会让 npm 页面上显示裂图）。
+## 四套配色（真机截图）
+
+**中文界面** —— 会话的步骤链展开后（思考 / 运行命令 / 写入 `hello.py` +26 −0 / 代码块）：
+
+| 霓虹 Neon | 体积 Volume |
+| --- | --- |
+| ![霓虹 · 中文](docs/shots/conversation-neon-dark.jpg) | ![体积 · 中文](docs/shots/conversation-volume-dark.jpg) |
+| **玻璃 Glass** | **实心 Solid** |
+| ![玻璃 · 中文](docs/shots/conversation-glass-dark.jpg) | ![实心 · 中文](docs/shots/conversation-solid-dark.jpg) |
+
+**English UI** —— 同一套皮肤的另外两个状态：
+
+| 正在输出（思考 + 工具行 + 停止键） | 回答完成（含代码块） |
+| --- | --- |
+| ![in flight](docs/shots/in-flight-en.jpg) | ![answered](docs/shots/answered-en.jpg) |
+
+四套配色各有明暗两半，上面都是暗色那一半。所有截图都是**官方 UI 里跑着本包时的实拍**
+（真引擎 + 真浏览器；语言不同只是客户端自己的 Language 设置不同 —— 社区可以用自己习惯的那种）。
 
 ## 安装
 
