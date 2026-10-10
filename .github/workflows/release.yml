@@ -41,4 +41,11 @@ jobs:
       - name: 发布到公开 npm（OIDC，无需 token）
           # 本仓已转 public ⇒ 打开 --provenance：npm 页面上会给这一版标一条"可验证的出处"
           # （哪个仓库、哪个 commit、哪条 workflow 发出来的），社区可以自己核。
+        # trusted publishing（OIDC）需要 npm ≥ 11.5，而 setup-node 装的 Node 22
+        # 自带 npm 10.x —— 版本不够时 npm publish 会直接拒绝（不是报 401，是"不支持"），
+        # 于是这一步必红。发布前显式升一次 npm。
+      - name: npm 升到 11（trusted publishing 需要 npm ≥ 11.5）
+        run: |
+          npm install -g npm@11
+          npm --version
           run: npm publish --access public --provenance
