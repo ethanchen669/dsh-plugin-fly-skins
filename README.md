@@ -14,12 +14,25 @@ DeepSeek Harness Web UI 的皮肤插件：`ctx.theme.overrideTokens()` 覆写官
 
 每套都有明暗两半，选择持久化在 profile 的 patch 层（字段 `skin`）。
 
+> 四套配色的**真机截图**（暗色，官方 UI 内实拍）见 [`docs/shots/gallery.md`](docs/shots/gallery.md) —— 那是给本页准备的画廊：本仓转 public 后把那段表格并入这里（私有期间贴上会让 npm 页面上显示裂图）。
+
 ## 安装
 
 ```bash
 dsh plugin --profile=<profile> add @dsh-fly/dsh-plugin-fly-skins        # npm registry
 dsh plugin --profile=<profile> add ./dsh-fly-dsh-plugin-fly-skins-0.1.0.tgz  # tarball
 ```
+
+**npm 12 起这三条路的代价不一样**（2026-07 的 breaking change：`allowScripts` 默认 off、
+`--allow-git` 与 `--allow-remote` 默认 `none`）：
+
+- **npm registry**（上面的第一条）✓ 不需要任何放行，是社区首选；
+- **本地 tarball / 本地目录** ✓ 不受影响；
+- **git 仓库、远端 tarball URL** ✗ 需要显式放行：`--allow-git` / `--allow-remote`，
+  或把它们写进 `package.json` 的脚本白名单（`npm approve-scripts --allow-scripts-pending`）。
+
+（本包自身没有 `preinstall` / `install` / `postinstall` 脚本 ✓，所以 `allowScripts` 默认关闭
+不影响安装 ✓。）
 
 在 Harness Web 的**侧栏 → Plugins** 页里也能装（同一个 `plugin_manager`）。装完**重启**
 （引擎把客户端包缓存在进程内，刷新页面不够）。
@@ -152,7 +165,8 @@ npm publish            # publishConfig 已把 registry 钉在公开 npm 上
 - 发完拿 scratch profile 验一次真实安装：`dsh plugin --profile=<测试 profile> add @dsh-fly/dsh-plugin-fly-skins`。
 
 发布出去以后，社区有三条消费路径，按需要选：**npm registry**（`dsh plugin add @dsh-fly/dsh-plugin-fly-skins`）、
-**tarball**（`npm pack` 出来的 `.tgz`，离线/内网可用）、**兄弟仓**（clone 到 `dsh-fly` 上一级的
+**tarball**（`npm pack` 出来的 `.tgz`，离线/内网可用；本地文件不受 npm 12 的 `allow-remote` 影响 ✓）、
+**兄弟仓**（clone 到 `dsh-fly` 上一级的
 `dsh-plugins/`，那边按 `plugins.lock.json` 解析 —— dsh-fly 自己走的就是这条）。
 
 ## 许可证与来源
