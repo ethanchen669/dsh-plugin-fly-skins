@@ -1,6 +1,6 @@
 {
   "name": "@dsh-fly/dsh-plugin-fly-skins",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "DSH Fly skins: the four Fly palettes (solid / glass / volume / neon) as a standalone DSH bundle + client plugin \u2014 token layer, chrome rules, Settings row",
   "license": "MIT",
   "publishConfig": {

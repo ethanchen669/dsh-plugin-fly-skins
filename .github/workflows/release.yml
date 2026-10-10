@@ -1,12 +1,11 @@
 # 推 tag 即发布（trusted publishing / OIDC）—— 不需要任何 Secret，也不需要 2FA 动态码。
 #
-# 前置（在 npm 网页上做一次，见 README「发布（维护者）」）：
-#   npm → 该包的 Settings → Trusted Publisher（或账号级 Trusted Publishing）
-#   填：GitHub owner=ethanchen669、repo=dsh-plugin-fly-skins、workflow=release.yml
+# 前置（在 npm 网页上做一次）：该包 Settings → Trusted Publisher
+#   Publisher=GitHub Actions / owner=ethanchen669 / repo=dsh-plugin-fly-skins / workflow=release.yml
 #
-# 为什么走 OIDC 而不是 NPM_TOKEN：npm 正在限制"绕过 2FA 的 token"
-# （2026-07-08 changelog：账号类操作已生效、直接发布约 2027-01 起失效），
-# 而 WebAuthn 安全密钥不给 6 位码 ⇒ 本地 `npm publish --otp=` 这条路会消失。
+# 注意（本文件踩过的坑）：一个 step 里只能有一个 run；注释的缩进必须与同级键对齐。
+# 早先三版都是**缩进错了的 YAML**，GitHub 的表现是"run 建出来了、但没有任何 job"——
+# 看着像发布失败，其实是文件根本没被解析。
 name: release
 
 on:
@@ -33,19 +32,13 @@ jobs:
           registry-url: https://registry.npmjs.org
       - name: 装依赖
         run: pnpm install --frozen-lockfile
+      - name: 全历史署名检查（内网身份一律拦下，硬门：脏了就不发）
+        run: node scripts/check-commit-identity.mjs --all
       - name: 发布前先跑本仓门禁（构建 + tsc + 全部测试）
         run: pnpm run verify
-      - name: 全历史署名检查（内网身份一律拦下）
-          # 原先写着 `|| true` —— 那等于"署名脏了也照发"，正是这道门要拦的事，去掉。
-          run: node scripts/check-commit-identity.mjs --all
-      - name: 发布到公开 npm（OIDC，无需 token）
-          # 本仓已转 public ⇒ 打开 --provenance：npm 页面上会给这一版标一条"可验证的出处"
-          # （哪个仓库、哪个 commit、哪条 workflow 发出来的），社区可以自己核。
-        # trusted publishing（OIDC）需要 npm ≥ 11.5，而 setup-node 装的 Node 22
-        # 自带 npm 10.x —— 版本不够时 npm publish 会直接拒绝（不是报 401，是"不支持"），
-        # 于是这一步必红。发布前显式升一次 npm。
-      - name: npm 升到 11（trusted publishing 需要 npm ≥ 11.5）
+      - name: npm 升到 11（trusted publishing 需要 npm >= 11.5）
         run: |
           npm install -g npm@11
           npm --version
-          run: npm publish --access public --provenance
+      - name: 发布到公开 npm（OIDC + provenance）
+        run: npm publish --access public --provenance
