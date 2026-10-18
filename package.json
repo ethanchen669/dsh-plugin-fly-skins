@@ -68,7 +68,7 @@
     "build": "node scripts/build-client.mjs .",
     "test": "node --test tests/*.spec.mjs",
     "typecheck": "tsc --noEmit",
-    "verify": "npm run build && npm run typecheck && node scripts/verify-design-tokens.mjs && npm test"
+    "verify": "npm run build && npm run typecheck && node scripts/check-design-tokens.mjs && npm test"
   },
   "engines": {
     "node": ">=20"

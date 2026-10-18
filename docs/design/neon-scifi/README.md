@@ -44,7 +44,7 @@
 | `shots/*.png` | 对照图 |
 
 CSS 里用 `--fly-hud-*` 命名（渲染方便），入库时按 `neon-scifi.tokens.ts` 的 `NEON_SCIFI_ALIASES`
-换成 `--dsw-specific-fly-hud-*`：**值必须逐字节一致**，由 `scripts/verify-design-tokens.mjs` 钉住。
+换成 `--dsw-specific-fly-hud-*`：**值必须逐字节一致**，由 `scripts/check-design-tokens.mjs` 钉住。
 
 ## 4. 设计规则明细
 

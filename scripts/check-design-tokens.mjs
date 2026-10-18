@@ -13,7 +13,12 @@
  * 发现规则：`docs/design/<名字>/design.json` 里登记 `variants`（id / css / tokens 导出名）
  * 与 `aliases`（设计稿名 → 入库名）。新增一轮设计只要放一份 design.json，不改编排脚本。
  *
- * 用法：`node scripts/verify-design-tokens.mjs`（皮肤仓根目录；退出码 0 = 一致）
+ * 用法：`node scripts/check-design-tokens.mjs`（皮肤仓根目录；退出码 0 = 一致）
+ *
+ * **名字不能叫 `verify-*`**：dsh-fly 的 `discoverPackageSteps()` 会扫每个（含外部插件）
+ * 仓的 `scripts/verify-*.mjs` 并当成一条**浏览器门禁组**，于是多出 `browser  verify skins`
+ * 一行、它的 golden 快照断言当场红（实测 34 !== 33）。这条脚本是本地纯逻辑检查，
+ * 挂 `npm run verify` 就够了，不要进那条发现规则。
  */
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'

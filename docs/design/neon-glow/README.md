@@ -82,7 +82,7 @@
 
 1. `src/client/tokens.ts`：选中强度的 5 颗 `--dsw-specific-fly-glow-*` 并进 `NEON_DARK`；
 2. `src/client/styles.ts`：把选中变体里除 token 声明块外的规则搬进 neon 深色段，
-   `--fly-glow-*` 换成入库名（`scripts/verify-design-tokens.mjs` 逐字节钉住）；
+   `--fly-glow-*` 换成入库名（`scripts/check-design-tokens.mjs` 逐字节钉住）；
 3. `scripts/verify.mjs` 建议补的断言：
    - 栏卡 `box-shadow` 含 `0 0 0 2px/3px` 且至少两层外晕；
    - `[data-tool='todo_write']` 的 `box-shadow` 含环 + 外晕；
