@@ -1,0 +1,123 @@
+/* ============================================================================
+   neon · 科幻化方向 A ——「HUD / 战术终端」（冷光）
+   ----------------------------------------------------------------------------
+   设计目标：把"霓虹"从"发光的浮卡"升级成"作战终端的仪表面"——
+   ① 场：近黑 + 24px 微网格 + 120px 主网格 + 3px 扫描线，右下青色地平线、左上一点琥珀余温；
+   ② 面：卡片内缘 6px 内缩的发丝取景框 + 右下 L 形角标（HUD 取景器语言）；
+   ③ 行：导航/工作区行 hover 走横向冷光扫，选中行左侧 2px 光条（带呼吸）；
+   ④ 字：分组标题左侧 2px 光条 + 字距 .06em，色温偏冷；
+   ⑤ 钮：New Session 内缘一圈冷光发丝（不叠 outline，避免在既有 glow 环里多出一个方框）。
+
+   锚点全部是本仓已有钩子（局部类名 / data-*），不写死 hash。
+   本文件是**设计稿的可执行版本**：截图就是它注入真页面跑出来的；落地时按
+   `neon-scifi.tokens.ts` 的 token 表 + 本文件规则整段搬进 `src/client/styles.ts`。
+
+   实测踩过的三个坑（照着改别再踩）：
+   · `[class*='_newSession']` 会同时命中 `button.newSession` 与 `span.newSessionLabelMask`
+     —— 按钮规则必须收窄到 `button`，否则按钮内部多出一个方框；
+   · 卡片与 frame 之间隔着一层无类名 div，取景框必须用**后代**选择器（`>` 命中 0 个）；
+   · 标题 `letter-spacing: .14em` + `text-transform: uppercase` 会把 "Workspaces" 撑出容器被裁。
+   ========================================================================== */
+
+/* ── 设计 token（落地时进 tokens.ts 的 NEON_DARK）────────────────────────── */
+html[data-fly-palette='neon'] {
+  --fly-hud-line: rgba(104, 226, 248, 0.34);
+  --fly-hud-line-soft: rgba(104, 226, 248, 0.14);
+  --fly-hud-glow: rgba(53, 211, 224, 0.42);
+  --fly-hud-warm: rgba(255, 176, 32, 0.55);
+  --fly-hud-ink: rgba(168, 232, 248, 0.78);
+  --fly-hud-field: repeating-linear-gradient(0deg, rgba(104, 226, 248, 0.045) 0 1px, transparent 1px 24px),
+    repeating-linear-gradient(90deg, rgba(104, 226, 248, 0.045) 0 1px, transparent 1px 24px),
+    repeating-linear-gradient(0deg, rgba(104, 226, 248, 0.085) 0 1px, transparent 1px 120px),
+    repeating-linear-gradient(90deg, rgba(104, 226, 248, 0.085) 0 1px, transparent 1px 120px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.012) 0 1px, transparent 1px 3px),
+    radial-gradient(1100px 620px at 92% 112%, rgba(53, 211, 224, 0.18), transparent 62%),
+    radial-gradient(760px 420px at 2% -10%, rgba(255, 176, 32, 0.07), transparent 60%),
+    linear-gradient(180deg, #03060c 0%, #050a13 58%, #071426 100%);
+}
+
+/* ── 场：画在真正涂底的那一层（frame 与 centerCol 的 _root 都吃这个 token）── */
+html[data-fly-palette='neon'] body[data-ds-dark-theme] {
+  --dsw-specific-fly-canvas: var(--fly-hud-field);
+  --dsw-specific-fly-plate-bg: rgba(5, 9, 15, 0.94);
+  --dsw-specific-fly-plate-line: rgba(104, 226, 248, 0.20);
+}
+
+/* ── 面：内缩发丝取景框 + 右下角标 ───────────────────────────────────────── */
+html[data-fly-palette='neon'] [class$='_frame']:has(> [class*='sidebarCol']) [class*='sidebarCol'] {
+  position: relative;
+}
+html[data-fly-palette='neon'] [class$='_frame']:has(> [class*='sidebarCol']) [class*='sidebarCol']::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid var(--fly-hud-line-soft);
+  border-radius: 12px;
+  pointer-events: none;
+  z-index: 2;
+}
+html[data-fly-palette='neon'] [class$='_frame']:has(> [class*='sidebarCol']) [class*='sidebarCol']::after {
+  content: '';
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  width: 18px;
+  height: 18px;
+  border-right: 1px solid var(--fly-hud-line);
+  border-bottom: 1px solid var(--fly-hud-line);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ── 钮：内缘冷光发丝（不叠 outline）─────────────────────────────────────── */
+html[data-fly-palette='neon'] button[class*='_newSession'] {
+  box-shadow: inset 0 0 0 1px var(--fly-hud-line-soft), 0 0 18px -8px var(--fly-hud-glow);
+}
+html[data-fly-palette='neon'] button[class*='_newSession']:hover {
+  box-shadow: inset 0 0 0 1px var(--fly-hud-line), 0 0 20px -6px var(--fly-hud-glow);
+}
+html[data-fly-palette='neon'] [class*='sidebarCol'] [class*='_toggle'] {
+  box-shadow: inset 0 0 0 1px var(--fly-hud-line-soft);
+  border-radius: 4px;
+}
+
+/* ── 行：冷光扫 + 选中光条 ─────────────────────────────────────────────────── */
+html[data-fly-palette='neon'] [class*='_panelRow']:hover {
+  background-image: linear-gradient(90deg, rgba(104, 226, 248, 0.10), transparent 58%);
+}
+html[data-fly-palette='neon'] [class*='_groupSection']:hover,
+html[data-fly-palette='neon'] [class*='_treeBody'] [class*='_row']:hover {
+  background-image: linear-gradient(90deg, rgba(104, 226, 248, 0.07), transparent 60%);
+}
+html[data-fly-palette='neon'] [class*='_groupSection'][aria-selected='true'],
+html[data-fly-palette='neon'] [class*='sessionRow'][class*='selected'] {
+  box-shadow: inset 2px 0 0 0 var(--fly-hud-glow);
+  background-image: linear-gradient(90deg, rgba(104, 226, 248, 0.12), transparent 62%);
+}
+
+/* ── 字：分组标题的 HUD 标签 ─────────────────────────────────────────────── */
+html[data-fly-palette='neon'] [class*='_sectionHeader'] {
+  letter-spacing: 0.06em;
+  color: var(--fly-hud-ink);
+  border-left: 2px solid var(--fly-hud-glow);
+  padding-left: 8px;
+  margin-left: -10px;
+}
+
+/* ── 焦点：冷光双环 ───────────────────────────────────────────────────────── */
+html[data-fly-palette='neon'] :is(button, a, [role='button'], input, textarea):focus-visible {
+  outline: 1px solid var(--fly-hud-glow);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(53, 211, 224, 0.14);
+}
+
+/* ── 动效：选中行光条呼吸（尊重 reduced-motion）─────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-fly-palette='neon'] [class*='sessionRow'][class*='selected'] {
+    animation: fly-hud-bar 2.8s ease-in-out infinite;
+  }
+  @keyframes fly-hud-bar {
+    0%, 100% { box-shadow: inset 2px 0 0 0 rgba(53, 211, 224, 0.34); }
+    50% { box-shadow: inset 2px 0 0 0 rgba(53, 211, 224, 0.62); }
+  }
+}

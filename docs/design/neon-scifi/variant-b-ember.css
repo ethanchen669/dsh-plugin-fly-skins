@@ -1,0 +1,114 @@
+/* ============================================================================
+   neon · 科幻化方向 B ——「深空熔炉 / EMBER」（暖光）
+   ----------------------------------------------------------------------------
+   与 A 共用同一套骨架（网格场 / 取景框 / 行光条 / 标题标签），只把"冷"换成"暖"：
+   ① 场：枪灰近黑，左下琥珀地平线、右上一点紫罗兰边缘光，网格更稀（32px）更暖；
+   ② 面：内缩发丝取景框 + 右下角标，卡片加一圈内描边（金属件倒角感）；
+   ③ 钮：New Session 淡琥珀充能渐变 + 琥珀发丝（不做硬边色块，实测像进度条卡住）；
+   ④ 行：hover 琥珀扫，选中行左侧 2px 琥珀光条；
+   ⑤ 字：分组标题左侧琥珀光条 + 字距 .06em，色温偏暖。
+
+   锚点与 A 相同（局部类名 / data-*），不写死 hash。两个方向二选一落地，
+   共用 `neon-scifi.tokens.ts` 里同名 token（值不同）。
+   ========================================================================== */
+
+html[data-fly-palette='neon'] {
+  --fly-hud-line: rgba(255, 176, 96, 0.32);
+  --fly-hud-line-soft: rgba(255, 176, 96, 0.13);
+  --fly-hud-glow: rgba(255, 150, 48, 0.40);
+  --fly-hud-warm: rgba(255, 176, 32, 0.55);
+  --fly-hud-ink: rgba(255, 208, 158, 0.80);
+  --fly-hud-field: repeating-linear-gradient(0deg, rgba(255, 176, 96, 0.040) 0 1px, transparent 1px 32px),
+    repeating-linear-gradient(90deg, rgba(255, 176, 96, 0.040) 0 1px, transparent 1px 32px),
+    repeating-linear-gradient(0deg, rgba(255, 176, 96, 0.075) 0 1px, transparent 1px 160px),
+    repeating-linear-gradient(90deg, rgba(255, 176, 96, 0.075) 0 1px, transparent 1px 160px),
+    radial-gradient(1000px 560px at 6% 112%, rgba(255, 140, 40, 0.16), transparent 64%),
+    radial-gradient(820px 480px at 104% -6%, rgba(150, 90, 220, 0.13), transparent 62%),
+    linear-gradient(180deg, #05060a 0%, #08080e 56%, #120d10 100%);
+}
+
+html[data-fly-palette='neon'] body[data-ds-dark-theme] {
+  --dsw-specific-fly-canvas: var(--fly-hud-field);
+  --dsw-specific-fly-plate-bg: rgba(9, 8, 11, 0.95);
+  --dsw-specific-fly-plate-line: rgba(255, 176, 96, 0.18);
+}
+
+/* 面：取景框 + 角标 + 内描边倒角 */
+html[data-fly-palette='neon'] [class$='_frame']:has(> [class*='sidebarCol']) [class*='sidebarCol'] {
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(255, 176, 96, 0.10), inset 0 0 42px -18px rgba(255, 140, 40, 0.28);
+}
+html[data-fly-palette='neon'] [class$='_frame']:has(> [class*='sidebarCol']) [class*='sidebarCol']::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid var(--fly-hud-line-soft);
+  border-radius: 12px;
+  pointer-events: none;
+  z-index: 2;
+}
+html[data-fly-palette='neon'] [class$='_frame']:has(> [class*='sidebarCol']) [class*='sidebarCol']::after {
+  content: '';
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  width: 18px;
+  height: 18px;
+  border-right: 1px solid var(--fly-hud-line);
+  border-bottom: 1px solid var(--fly-hud-line);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* 钮：淡琥珀充能 */
+html[data-fly-palette='neon'] button[class*='_newSession'] {
+  background-image: linear-gradient(100deg, rgba(255, 140, 40, 0.10), transparent 72%);
+  box-shadow: inset 0 0 0 1px rgba(255, 176, 96, 0.22), 0 0 18px -8px rgba(255, 150, 48, 0.55);
+}
+html[data-fly-palette='neon'] button[class*='_newSession']:hover {
+  box-shadow: inset 0 0 0 1px rgba(255, 176, 96, 0.42), 0 0 20px -6px rgba(255, 150, 48, 0.70);
+}
+html[data-fly-palette='neon'] [class*='sidebarCol'] [class*='_toggle'] {
+  box-shadow: inset 0 0 0 1px rgba(255, 176, 96, 0.22);
+  border-radius: 4px;
+}
+
+/* 行：暖扫 + 选中光条 */
+html[data-fly-palette='neon'] [class*='_panelRow']:hover {
+  background-image: linear-gradient(90deg, rgba(255, 176, 96, 0.10), transparent 58%);
+}
+html[data-fly-palette='neon'] [class*='_groupSection']:hover,
+html[data-fly-palette='neon'] [class*='_treeBody'] [class*='_row']:hover {
+  background-image: linear-gradient(90deg, rgba(255, 176, 96, 0.07), transparent 60%);
+}
+html[data-fly-palette='neon'] [class*='_groupSection'][aria-selected='true'],
+html[data-fly-palette='neon'] [class*='sessionRow'][class*='selected'] {
+  box-shadow: inset 2px 0 0 0 var(--fly-hud-glow);
+  background-image: linear-gradient(90deg, rgba(255, 150, 48, 0.14), transparent 62%);
+}
+
+/* 字：分组标题的 HUD 标签 */
+html[data-fly-palette='neon'] [class*='_sectionHeader'] {
+  letter-spacing: 0.06em;
+  color: var(--fly-hud-ink);
+  border-left: 2px solid var(--fly-hud-glow);
+  padding-left: 8px;
+  margin-left: -10px;
+}
+
+/* 焦点 */
+html[data-fly-palette='neon'] :is(button, a, [role='button'], input, textarea):focus-visible {
+  outline: 1px solid var(--fly-hud-glow);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px rgba(255, 150, 48, 0.14);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-fly-palette='neon'] [class*='sessionRow'][class*='selected'] {
+    animation: fly-ember-bar 3.2s ease-in-out infinite;
+  }
+  @keyframes fly-ember-bar {
+    0%, 100% { box-shadow: inset 2px 0 0 0 rgba(255, 150, 48, 0.32); }
+    50% { box-shadow: inset 2px 0 0 0 rgba(255, 150, 48, 0.60); }
+  }
+}
