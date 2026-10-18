@@ -1,15 +1,19 @@
 /* ============================================================================
-   neon · 科幻化第二轮 · 方向 A ——「强发光 / 蓝边常亮」
+   neon · 科幻化第二轮 · 方向 A ——「强发光 / 蓝边常亮」（**范围收紧版**）
    ----------------------------------------------------------------------------
-   方向按用户给的两个参考点：
-   ① 发光类组件（任务栏列表卡 / 输入卡）——蓝色发光边框**加粗**（2px 实环）、外光晕**加强**；
-   ② 左侧会话栏的卡片边框也吃同一套发光（蓝边 + 外光晕 + 极淡内辉）。
+   范围（用户 2026-10-18 第二次裁决）：
+     ✅ 只给两处：① 左侧栏的**卡片边框**；② **任务列表卡片**（schedule / automation 任务卡）。
+     ❌ 不许发光：工作区输入框（composer）、会话选中胶囊（sessionRow）、工作区行（projectRow）、
+        面板行（panelRow）、键盘焦点环 —— 上一版把这些也点亮了，是越界。
 
-   实现手法：一律用 `box-shadow` 叠环（0 0 0 Npx 不加布局），不写 border —— 改 border 会挪内容。
-   光晕分三层：近环（0 0 0 2px）+ 中晕（0 0 18px）+ 远晕（0 0 46px），内辉一层 inset。
+   手法：不写 border，只用 `box-shadow` 叠环（`0 0 0 Npx` 做"加粗蓝边"，不改布局），
+   再叠中晕 / 远晕 / 内辉。两个旋钮可以分别调。
 
-   锚点：`sidebarCol` / `sessionRow` / `projectRow` / `panelRow` / `composerStack [class*='_card']`
-   / `_ioCard`。不写死 hash。
+   锚点：
+   · 左侧栏卡：`[class$='_frame']:has(> [class*='sidebarCol']) [class*='sidebarCol']`
+   · 任务卡：`[data-session-schedule-task]`（会话里的任务条）与
+     `[class*='rightbarCol'] [class*='_card']`（自动化任务面板里的任务卡）。
+   不写死 hash。
    ========================================================================== */
 
 html[data-fly-palette='neon'] {
@@ -20,7 +24,7 @@ html[data-fly-palette='neon'] {
   --fly-glow-inner: rgba(96, 200, 255, 0.10);
 }
 
-/* ① 侧栏卡：蓝边 + 三层光晕 + 内辉 */
+/* ① 左侧栏卡片：蓝边 + 三层光晕 + 内辉 */
 html[data-fly-palette='neon'] body[data-ds-dark-theme] [class$='_frame']:has(> [class*='sidebarCol']) [class*='sidebarCol'] {
   box-shadow:
     0 0 0 2px var(--fly-glow-ring),
@@ -29,53 +33,22 @@ html[data-fly-palette='neon'] body[data-ds-dark-theme] [class$='_frame']:has(> [
     inset 0 0 26px -6px var(--fly-glow-inner);
 }
 
-/* ② 会话行 / 工作区行：蓝色发光边框（选中更亮、常态也带一层） */
-html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='sessionRow']:not([class*='selected']),
-html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='projectRow'] {
+/* ② 任务列表卡片：同样一套光（边更亮一档，因为卡比栏小） */
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='rightbarCol'] [class*='_card'],
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [data-session-schedule-task] {
   box-shadow:
-    0 0 0 1px var(--fly-glow-ring),
-    0 0 12px -2px var(--fly-glow-near);
-  border-radius: 10px;
+    0 0 0 2px var(--fly-glow-ring),
+    0 0 20px 1px var(--fly-glow-near),
+    0 0 48px 4px var(--fly-glow-far),
+    inset 0 0 18px -6px var(--fly-glow-inner);
 }
-html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='sessionRow'][class*='selected'] {
+
+/* ③ 任务卡 hover：只加亮环与中晕，不改变尺寸 */
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='rightbarCol'] [class*='_card']:hover,
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [data-session-schedule-task]:hover {
   box-shadow:
     0 0 0 2px var(--fly-glow-core),
-    0 0 18px 0 var(--fly-glow-near),
-    0 0 42px 4px var(--fly-glow-far),
-    inset 0 0 18px -4px var(--fly-glow-inner);
-}
-html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='sessionRow']:hover:not([class*='selected']),
-html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='projectRow']:hover {
-  box-shadow:
-    0 0 0 2px var(--fly-glow-ring),
-    0 0 20px 0 var(--fly-glow-near),
-    0 0 44px 2px var(--fly-glow-far);
-}
-
-/* ③ 面板行（Plugins / Automation tasks）：hover 才点亮，避免整栏全是圈 */
-html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='_panelRow'] {
-  border-radius: 10px;
-}
-html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='_panelRow']:hover {
-  box-shadow:
-    0 0 0 1px var(--fly-glow-ring),
-    0 0 16px -2px var(--fly-glow-near);
-}
-
-/* ④ 输入卡（Describe what…）：换成蓝光（现有是琥珀光圈），边更亮、晕更远 */
-html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='composerStack'] [class*='_card'],
-html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='_ioCard'] {
-  box-shadow:
-    0 0 0 2px var(--fly-glow-ring),
     0 0 26px 2px var(--fly-glow-near),
-    0 0 64px 8px var(--fly-glow-far),
-    inset 0 0 22px -6px var(--fly-glow-inner);
-}
-
-/* ⑤ 键盘焦点沿用同一套光 */
-html[data-fly-palette='neon'] body[data-ds-dark-theme] :is(button, a, [role='button'], input, textarea):focus-visible {
-  outline: none;
-  box-shadow:
-    0 0 0 2px var(--fly-glow-core),
-    0 0 20px 0 var(--fly-glow-near);
+    0 0 60px 6px var(--fly-glow-far),
+    inset 0 0 20px -6px var(--fly-glow-inner);
 }
