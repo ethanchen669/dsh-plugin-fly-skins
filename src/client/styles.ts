@@ -1031,10 +1031,10 @@ ${NEON_DARK_SCOPE} [class$='_frame']:not([data-sidebar-collapsed]) > [class*='si
     linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.02) 26%, transparent 42%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 42%);
   box-shadow:
-    /* 强发光（方案 A）：环 + 中晕 + 远晕 + 内辉，**追加**在既有阶梯之前 ——
+    /* 强发光（方案 A）：环 1.5px + 中晕 + 远晕 + 内辉，**追加**在既有阶梯之前 ——
        直接写一条新的 box-shadow 会把这套立体阶梯整个覆盖掉（亮缘、压暗底全丢），
        verify-shell 的「栏卡边缘方言」断言也会当场红。 */
-    0 0 0 2px var(--dsw-specific-fly-glow-ring),
+    0 0 0 1.5px var(--dsw-specific-fly-glow-ring),
     0 0 22px 2px var(--dsw-specific-fly-glow-near),
     0 0 56px 6px var(--dsw-specific-fly-glow-far),
     inset 0 0 26px -6px var(--dsw-specific-fly-glow-inner),
@@ -1052,14 +1052,14 @@ ${NEON_DARK_SCOPE} [class$='_frame']:not([data-sidebar-collapsed]) > [class*='si
 ${NEON_DARK_SCOPE} [data-tool='todo_write']  {
   border-radius: 12px;
   box-shadow:
-    0 0 0 2px var(--dsw-specific-fly-glow-ring),
+    0 0 0 1.5px var(--dsw-specific-fly-glow-ring),
     0 0 20px 1px var(--dsw-specific-fly-glow-near),
     0 0 48px 4px var(--dsw-specific-fly-glow-far),
     inset 0 0 18px -6px var(--dsw-specific-fly-glow-inner);
 }
 ${NEON_DARK_SCOPE} [data-tool='todo_write']:hover  {
   box-shadow:
-    0 0 0 2px var(--dsw-specific-fly-glow-core),
+    0 0 0 1.5px var(--dsw-specific-fly-glow-core),
     0 0 26px 2px var(--dsw-specific-fly-glow-near),
     0 0 60px 6px var(--dsw-specific-fly-glow-far),
     inset 0 0 20px -6px var(--dsw-specific-fly-glow-inner);

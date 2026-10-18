@@ -10,11 +10,11 @@
 
 /** 强度 A：蓝边常亮（2px 环 + 三层光晕）。 */
 export const NEON_GLOW_STRONG = {
-  '--dsw-specific-fly-glow-core': 'rgba(96, 200, 255, 0.92)',
-  '--dsw-specific-fly-glow-ring': 'rgba(58, 168, 255, 0.62)',
-  '--dsw-specific-fly-glow-near': 'rgba(46, 146, 255, 0.38)',
-  '--dsw-specific-fly-glow-far': 'rgba(34, 118, 255, 0.22)',
-  '--dsw-specific-fly-glow-inner': 'rgba(96, 200, 255, 0.10)',
+  '--dsw-specific-fly-glow-core': 'rgba(120, 225, 255, 0.92)',
+  '--dsw-specific-fly-glow-ring': 'rgba(77, 208, 255, 0.62)',
+  '--dsw-specific-fly-glow-near': 'rgba(60, 190, 255, 0.38)',
+  '--dsw-specific-fly-glow-far': 'rgba(40, 160, 245, 0.22)',
+  '--dsw-specific-fly-glow-inner': 'rgba(120, 225, 255, 0.10)',
 } as const
 
 /** 强度 B：蓝边呼吸（3px 环 + 更大光晕 + 4.2s 呼吸）。 */

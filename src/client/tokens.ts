@@ -690,15 +690,17 @@ const NEON_DARK = {
   // their solid plate from a scoped rule in styles.ts instead, so the panel
   // identity and the readable-card requirement stop fighting over one token.
   '--dsw-specific-menu': 'rgba(6, 10, 18, 0.97)',
-  // 强发光（2026-10-18 用户裁决：方案 A「常亮」，B 的 3px 边框过粗被否）。
+  // 强发光（2026-10-18 用户裁决：方案 A「常亮」，B 的 3px 边框过粗被否；
+  // 颜色裁决：用既有的「运行中」状态光那颗蓝 rgba(77,208,255) 派生 ——
+  // 环 @.62、core @.92、晕 @.38/.22，不再自造 207° 的电光蓝）。
   // 只给两处：左侧栏卡边框 + 对话里的待办卡（[data-tool='todo_write']）。
   // 设计稿与依据：docs/design/neon-glow/README.md（token 名与值由
   // scripts/verify-design-tokens.mjs 逐字节比对）。
-  '--dsw-specific-fly-glow-core': 'rgba(96, 200, 255, 0.92)',
-  '--dsw-specific-fly-glow-ring': 'rgba(58, 168, 255, 0.62)',
-  '--dsw-specific-fly-glow-near': 'rgba(46, 146, 255, 0.38)',
-  '--dsw-specific-fly-glow-far': 'rgba(34, 118, 255, 0.22)',
-  '--dsw-specific-fly-glow-inner': 'rgba(96, 200, 255, 0.10)',
+  '--dsw-specific-fly-glow-core': 'rgba(120, 225, 255, 0.92)',
+  '--dsw-specific-fly-glow-ring': 'rgba(77, 208, 255, 0.62)',
+  '--dsw-specific-fly-glow-near': 'rgba(60, 190, 255, 0.38)',
+  '--dsw-specific-fly-glow-far': 'rgba(40, 160, 245, 0.22)',
+  '--dsw-specific-fly-glow-inner': 'rgba(120, 225, 255, 0.10)',
 } as const
 
 /**

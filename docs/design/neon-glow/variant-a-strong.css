@@ -17,17 +17,17 @@
    ========================================================================== */
 
 html[data-fly-palette='neon'] {
-  --fly-glow-core: rgba(96, 200, 255, 0.92);
-  --fly-glow-ring: rgba(58, 168, 255, 0.62);
-  --fly-glow-near: rgba(46, 146, 255, 0.38);
-  --fly-glow-far: rgba(34, 118, 255, 0.22);
-  --fly-glow-inner: rgba(96, 200, 255, 0.10);
+  --fly-glow-core: rgba(120, 225, 255, 0.92);
+  --fly-glow-ring: rgba(77, 208, 255, 0.62);
+  --fly-glow-near: rgba(60, 190, 255, 0.38);
+  --fly-glow-far: rgba(40, 160, 245, 0.22);
+  --fly-glow-inner: rgba(120, 225, 255, 0.10);
 }
 
 /* ① 左侧栏卡片：蓝边 + 三层光晕 + 内辉 */
 html[data-fly-palette='neon'] body[data-ds-dark-theme] [class$='_frame']:has(> [class*='sidebarCol']) [class*='sidebarCol'] {
   box-shadow:
-    0 0 0 2px var(--fly-glow-ring),
+    0 0 0 1.5px var(--fly-glow-ring),
     0 0 22px 2px var(--fly-glow-near),
     0 0 56px 6px var(--fly-glow-far),
     inset 0 0 26px -6px var(--fly-glow-inner);
@@ -37,7 +37,7 @@ html[data-fly-palette='neon'] body[data-ds-dark-theme] [class$='_frame']:has(> [
 html[data-fly-palette='neon'] body[data-ds-dark-theme] [data-tool='todo_write'] {
   border-radius: 12px;
   box-shadow:
-    0 0 0 2px var(--fly-glow-ring),
+    0 0 0 1.5px var(--fly-glow-ring),
     0 0 20px 1px var(--fly-glow-near),
     0 0 48px 4px var(--fly-glow-far),
     inset 0 0 18px -6px var(--fly-glow-inner);
@@ -46,7 +46,7 @@ html[data-fly-palette='neon'] body[data-ds-dark-theme] [data-tool='todo_write'] 
 /* ③ hover：只加亮环与中晕（不动尺寸） */
 html[data-fly-palette='neon'] body[data-ds-dark-theme] [data-tool='todo_write']:hover {
   box-shadow:
-    0 0 0 2px var(--fly-glow-core),
+    0 0 0 1.5px var(--fly-glow-core),
     0 0 26px 2px var(--fly-glow-near),
     0 0 60px 6px var(--fly-glow-far),
     inset 0 0 20px -6px var(--fly-glow-inner);
