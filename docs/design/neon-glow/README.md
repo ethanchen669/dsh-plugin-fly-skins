@@ -1,43 +1,43 @@
 # 设计稿 · neon 科幻化第二轮 ——「强发光」（蓝边加粗 + 光晕加强）
 
-> 2026-10-18。第一轮（网格场 + HUD 取景框）方向被否；第二轮初版**范围放大了**（把输入框和
-> 会话选中胶囊也点亮），用户第二次裁决后收紧为：
->
-> **只给两处**：① 左侧栏的卡片边框；② 任务列表卡片（schedule / automation 任务卡）。
-> 其余表面**一律不发光**。
+> 2026-10-18。三轮裁决后的最终范围：
+> **只给两处发光**：① 左侧栏的**卡片边框**；② **对话流里的待办 / 计划卡**（`todo_write` 工具卡）。
+> 其余表面一律不发光 —— 这是用户明确约束，别"顺手"扩散。
 
 ## 1. 范围（这张表就是验收口径）
 
-| 表面 | 发光 | 钩子 | 说明 |
+| 表面 | 发光 | 钩子 | 依据 |
 | --- | --- | --- | --- |
-| 左侧栏卡片边框 | ✅ | `[class$='_frame']:has(> [class*='sidebarCol']) [class*='sidebarCol']` | 蓝环 + 中晕 + 远晕 + 内辉 |
-| 任务列表卡片 | ✅ | `[class*='rightbarCol'] [class*='_card']`（自动化任务面板）/ `[data-session-schedule-task]`（会话内任务条） | 同上，比栏卡亮一档 |
-| 工作区输入框（composer） | ❌ | —— | 保持原生暖光；见 `shots/variant-a-composer.png` |
-| 会话选中胶囊（sessionRow） | ❌ | —— | 保持原生；不叠蓝 |
-| 工作区行（projectRow） | ❌ | —— | 同上 |
-| 面板行（Plugins 等） | ❌ | —— | 同上 |
-| 键盘焦点环 | ❌ | —— | 不做改动（焦点环仍走上游默认） |
+| 左侧栏卡片边框 | ✅ | `[class$='_frame']:has(> [class*='sidebarCol']) [class*='sidebarCol']` | 已有钩子 |
+| 对话流的待办 / 计划卡 | ✅ | **`[data-tool='todo_write']`** | 上游 `dsh-client-ui-tool` 的 `ToolRow` 根节点带 `data-tool={toolName}`（源码实证，不用哈希类名） |
+| 工作区输入框（composer） | ❌ | —— | 保持原生暖光（见 `shots/*-composer.png`） |
+| 会话选中胶囊 / 工作区行 / 面板行 | ❌ | —— | 保持原生 |
+| 自动化任务抽屉里的卡 | ❌ | —— | 上一版误把它当成"任务列表卡"，已撤掉 |
+| 键盘焦点环 | ❌ | —— | 不改动 |
+
+> 术语对齐：**"任务列表卡" = 对话里 `todo_write` 工具渲染的那张待办 / 计划卡**，不是右侧抽屉
+> 「Automation tasks」面板，也不是会话 hover 的小任务条。
 
 ## 2. 做法
 
-**不写 `border`，只用 `box-shadow` 叠环**：`0 0 0 Npx` 做"加粗的蓝边"（不加布局、不挪内容），
-再叠中晕 / 远晕 / 内辉。这样"边框变粗"和"光晕变强"是两个独立旋钮。
+**不写 `border`，只用 `box-shadow` 叠环**：`0 0 0 Npx` 做"加粗的蓝边"（不改布局、不挪内容），
+再叠中晕 / 远晕 / 内辉。"边框粗细"和"光晕强度"是两个独立旋钮。
 
 | 层 | A（常亮） | B（呼吸） |
 | --- | --- | --- |
-| 近环 `0 0 0 Npx` | 2px | 3px |
-| 中晕 | 22px（栏卡）/ 20px（任务卡） | 34px / 28px |
+| 近环 | 2px | 3px |
+| 中晕 | 22px（栏卡）/ 20px（待办卡） | 34px / 28px |
 | 远晕 | 56px / 48px | 88px / 68px |
 | 内辉 | 26px / 18px | 34px / 24px |
-| 动效 | 无 | 任务卡 hover 2.6s 呼吸（仅 `no-preference`） |
+| 动效 | 无 | 待办卡 hover 2.6s 呼吸（仅 `no-preference`） |
 
-## 3. 对照图（真页面注入 CSS 后截；任务卡是夹具，见 §6）
+## 3. 对照图
 
-| | 侧栏（只栏卡发光） | 任务卡 | 输入框（必须无蓝光） |
+| | 侧栏（只栏卡发光） | 待办卡（夹具） | 输入框（必须无蓝光） |
 | --- | --- | --- | --- |
-| 现状 | ![baseline](shots/baseline-sidebar.png) | ![baseline](shots/baseline-tasks.png) | ![baseline](shots/baseline-composer.png) |
-| A · 常亮 | ![A](shots/variant-a-sidebar.png) | ![A](shots/variant-a-tasks.png) | ![A](shots/variant-a-composer.png) |
-| B · 呼吸 | ![B](shots/variant-b-sidebar.png) | ![B](shots/variant-b-tasks.png) | ![B](shots/variant-b-composer.png) |
+| 现状 | ![baseline](shots/baseline-sidebar.png) | ![baseline](shots/baseline-taskcard.png) | ![baseline](shots/baseline-composer.png) |
+| A · 常亮 | ![A](shots/variant-a-sidebar.png) | ![A](shots/variant-a-taskcard.png) | ![A](shots/variant-a-composer.png) |
+| B · 呼吸 | ![B](shots/variant-b-sidebar.png) | ![B](shots/variant-b-taskcard.png) | ![B](shots/variant-b-composer.png) |
 
 ## 4. token（深色半区）
 
@@ -51,41 +51,44 @@
 
 ## 5. 已知坑（实测）
 
-1. **范围错误是这一轮最大的坑**：初版把"发光类组件"理解成了"所有卡"，于是 composer 与
-   会话胶囊也被点亮 —— 用户明确否决。**设计前先问"哪几处"，并在稿子里写出"不发光清单"**，
-   这条清单本身就是验收口径（§1 的表）。
-2. **特异性不够 = 整条规则静默失效**：皮肤自己的卡/行规则带 `:not([data-sidebar-collapsed]) >`
-   这类形状，初版少一颗属性，读回的 `box-shadow` 还是皮肤原值。修法：加 `body[data-ds-dark-theme]`
-   前缀（与皮肤深色半区同作用域、更高一级）。
-3. **frame 的 `overflow: hidden`** 会裁掉栏卡外晕：12px 的卡片外边距就是外晕能露的全部宽度，
-   所以"外晕加强"主要靠环亮度 + 内辉。
-4. **`[class*='_newSession']` 双命中**（`button` 与内部 `span`），按钮规则必须收窄到 `button`。
-5. **自动化任务面板在空态下没有卡**：任务卡截图用夹具（三张卡，类名沿用上游真实的 `Ww4dvW_card`，
-   挂在 `rightbarCol` 内以满足作用域）。**落地后必须用真实任务复拍一张**再定强度。
+1. **范围错了两轮**：第一轮理解成"所有卡"（composer、会话胶囊被点亮，被否）；第二轮理解成
+   右侧抽屉「Automation tasks」面板。**设计前必须先跟用户对齐"哪一处"，并写出"不发光清单"**。
+2. **待办卡的锚是 `data-tool`**：上游 `ToolRow` 根节点是
+   `div[data-variant][data-tool][data-state]`，类名是哈希（`.o3BgMG_root`）。写 `[data-tool='todo_write']`
+   既稳又不用碰哈希。
+3. **本机 scratch profile 造不出真实会话**：模型走 `llm-mioffice`，子进程里没有
+   `LLM_MIOFFICE_API_KEY`（报 `MISSING_CREDENTIAL`），所以待办卡截图是**夹具**（按 ToolRow 真实结构搭）。
+   **落地后必须用真实会话复拍一张**再定强度。
+4. **特异性不够 = 整条规则静默失效**：皮肤自己的卡/行规则带 `:not([data-sidebar-collapsed]) >`
+   这类形状，本稿第一版少一颗属性，读回的 `box-shadow` 还是皮肤原值；修法是加
+   `body[data-ds-dark-theme]` 前缀。
+5. **frame 的 `overflow: hidden`** 会裁栏卡外晕：12px 卡片外边距就是外晕能露的全部宽度。
+6. **待办卡内部还有一张 `_ioCard`**：它自带霓虹的暖色发丝边，蓝环是加在**外层 ToolRow** 上的；
+   两层边并置是否好看需要真机确认（若要求"整卡统一蓝"，得同时改内层描边，属于落地细节）。
 
 ## 6. 风险
 
 | 风险 | 处置 |
 | --- | --- |
-| 多层大半径 shadow 在 1× 外接屏显糊 | A 的 56/48px 是上限；B 建议只用于 2× 屏。落地后按 2560×1440 实拍复核 |
-| 任务卡数量多时整屏发蓝 | 大光晕只给任务卡与栏卡；其余表面不发光（§1 的 ❌ 清单就是约束） |
+| 多层大半径 shadow 在 1× 外接屏显糊 | A 的 56/48px 是上限；B 建议只用于 2× 屏，落地后按 2560×1440 复拍 |
+| 待办卡在会话里出现多张 → 整屏发蓝 | 光晕只给这两处；同屏多卡时若过亮，把远晕从 48px 收到 32px |
 | 呼吸动画干扰阅读 | 仅 `no-preference`；只动光晕不动环宽 |
-| 浅色半区 | 不做（白底蓝晕会糊），第二轮单独设计 |
+| 浅色半区 | 不做（白底蓝晕会糊） |
 
 ## 7. 落地映射
 
 1. `src/client/tokens.ts`：选中强度的 5 颗 `--dsw-specific-fly-glow-*` 并进 `NEON_DARK`；
 2. `src/client/styles.ts`：把选中变体里除 token 声明块外的规则搬进 neon 深色段，
-   `--fly-glow-*` 换成入库名（`scripts/verify-design-tokens.mjs` 会逐字节钉住）；
+   `--fly-glow-*` 换成入库名（`scripts/verify-design-tokens.mjs` 逐字节钉住）；
 3. `scripts/verify.mjs` 建议补的断言：
    - 栏卡 `box-shadow` 含 `0 0 0 2px/3px` 且至少两层外晕；
-   - 任务卡 `box-shadow` 含环 + 外晕；
-   - **反向**：composer 与 sessionRow 的 `box-shadow` 与改前**逐字节相同**（范围不许扩散）；
-   - `prefers-reduced-motion: reduce` 下 `animation-name === 'none'`。
-4. `docs/shots/` 补两张画廊图。
+   - `[data-tool='todo_write']` 的 `box-shadow` 含环 + 外晕；
+   - **反向**：composer 与 sessionRow 的 `box-shadow` 与改前逐字节相同（范围不许扩散）；
+   - `prefers-reduced-motion: reduce` 下 `animation-name === 'none'`；
+4. `docs/shots/` 用**真实会话**补两张画廊图。
 
-## 8. 待你确认
+## 8. 待确认
 
 - **A 还是 B**（常亮 / 呼吸）；
-- 栏卡与任务卡谁更亮一档（当前任务卡略亮）；
-- 任务卡强度最终要拿**真实任务**复拍确认（现在是夹具）。
+- 待办卡内层 `_ioCard` 的暖色描边是否也要转蓝（当前外侧蓝、内侧暖）；
+- 真实会话复拍后，强度要不要再调。

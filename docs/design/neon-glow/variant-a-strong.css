@@ -1,19 +1,19 @@
 /* ============================================================================
-   neon · 科幻化第二轮 · 方向 A ——「强发光 / 蓝边常亮」（**范围收紧版**）
+   neon · 科幻化第二轮 · 方向 A ——「强发光 / 蓝边常亮」（范围：两处）
    ----------------------------------------------------------------------------
-   范围（用户 2026-10-18 第二次裁决）：
-     ✅ 只给两处：① 左侧栏的**卡片边框**；② **任务列表卡片**（schedule / automation 任务卡）。
-     ❌ 不许发光：工作区输入框（composer）、会话选中胶囊（sessionRow）、工作区行（projectRow）、
-        面板行（panelRow）、键盘焦点环 —— 上一版把这些也点亮了，是越界。
+   范围（用户两次裁决后）：
+     ✅ ① 左侧栏的**卡片边框**
+     ✅ ② **对话流里的待办 / 计划卡**（todo_write 工具卡）
+     ❌ 不发光：工作区输入框（composer）、会话选中胶囊、工作区行、面板行、焦点环、
+        自动化任务抽屉里的卡（那不是本轮的"任务列表卡"，已撤掉）
 
-   手法：不写 border，只用 `box-shadow` 叠环（`0 0 0 Npx` 做"加粗蓝边"，不改布局），
-   再叠中晕 / 远晕 / 内辉。两个旋钮可以分别调。
+   钩子来源（读上游源码得的，不是猜的）：
+   · 待办卡 = `dsh-client-ui-tool` 的 `ToolRow`，根节点是
+     `div.ToolRow_module_css_default.root[data-variant][data-tool][data-state]`
+     —— 所以**稳定的锚是 `[data-tool='todo_write']`**（哈希类名不用写）。
+   · 左侧栏卡 = `[class$='_frame']:has(> [class*='sidebarCol']) [class*='sidebarCol']`。
 
-   锚点：
-   · 左侧栏卡：`[class$='_frame']:has(> [class*='sidebarCol']) [class*='sidebarCol']`
-   · 任务卡：`[data-session-schedule-task]`（会话里的任务条）与
-     `[class*='rightbarCol'] [class*='_card']`（自动化任务面板里的任务卡）。
-   不写死 hash。
+   手法：不写 border，只用 `box-shadow` 叠环（`0 0 0 Npx` 做"加粗蓝边"，不改布局）。
    ========================================================================== */
 
 html[data-fly-palette='neon'] {
@@ -33,9 +33,9 @@ html[data-fly-palette='neon'] body[data-ds-dark-theme] [class$='_frame']:has(> [
     inset 0 0 26px -6px var(--fly-glow-inner);
 }
 
-/* ② 任务列表卡片：同样一套光（边更亮一档，因为卡比栏小） */
-html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='rightbarCol'] [class*='_card'],
-html[data-fly-palette='neon'] body[data-ds-dark-theme] [data-session-schedule-task] {
+/* ② 待办 / 计划卡（todo_write 的工具卡）：同一套光，边更亮一档 */
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [data-tool='todo_write'] {
+  border-radius: 12px;
   box-shadow:
     0 0 0 2px var(--fly-glow-ring),
     0 0 20px 1px var(--fly-glow-near),
@@ -43,9 +43,8 @@ html[data-fly-palette='neon'] body[data-ds-dark-theme] [data-session-schedule-ta
     inset 0 0 18px -6px var(--fly-glow-inner);
 }
 
-/* ③ 任务卡 hover：只加亮环与中晕，不改变尺寸 */
-html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='rightbarCol'] [class*='_card']:hover,
-html[data-fly-palette='neon'] body[data-ds-dark-theme] [data-session-schedule-task]:hover {
+/* ③ hover：只加亮环与中晕（不动尺寸） */
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [data-tool='todo_write']:hover {
   box-shadow:
     0 0 0 2px var(--fly-glow-core),
     0 0 26px 2px var(--fly-glow-near),

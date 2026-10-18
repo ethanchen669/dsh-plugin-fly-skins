@@ -1,13 +1,14 @@
 /**
- * 设计稿渲染器（neon-glow，范围收紧版）：只演示 ① 左侧栏边框 ② 任务列表卡片 两处发光。
+ * 设计稿渲染器（neon-glow）：只演示 ① 左侧栏边框 ② 对话里的待办卡（todo_write）两处发光。
  *
- * 运行（**必须在 dsh-fly 仓根目录跑**，借用那边的 verify-lib 与引擎闭包）：
+ * 运行（必须在 dsh-fly 仓根目录）：
  *   cd /Users/ethan/ai-workspace/dsh-fly && node \
  *     ../dsh-plugins/dsh-plugin-fly-skins/docs/design/neon-glow/render.mjs
  *
  * 前置：/tmp/fly-chrome-shot 里 profile=fly、皮肤=neon。
- * 输出：shots/{baseline,variant-a,variant-b}-{sidebar,tasks,composer}.png
- * 注意：`-tasks` 是**夹具**（自动化任务面板空态无卡），类名沿用上游真实的 Ww4dvW_card。
+ * 输出：shots/{baseline,variant-a,variant-b}-{sidebar,composer,taskcard}.png
+ * 注意：taskcard 是**夹具**（scratch profile 无模型凭证，造不出真实会话），
+ *       结构照上游 ToolRow（[data-tool='todo_write']）搭。
  */
 import { spawn } from 'node:child_process'
 import { readFileSync } from 'node:fs'
@@ -16,7 +17,7 @@ import { dismissFirstRunDialogs } from '../scripts/verify-lib.mjs'
 const HOME = '/tmp/fly-chrome-shot'
 const OUT = '/Users/ethan/ai-workspace/dsh-plugins/dsh-plugin-fly-skins/docs/design/neon-glow/shots'
 const DESIGN = '/Users/ethan/ai-workspace/dsh-plugins/dsh-plugin-fly-skins/docs/design/neon-glow'
-const PORT = 7_600 + Math.floor(Math.random() * 60)
+const PORT = 7_800 + Math.floor(Math.random() * 60)
 let log = ''
 const child = spawn(join(process.cwd(), 'node_modules/.bin/dsh'), ['--profile', 'fly', '--host', '127.0.0.1', '--port', String(PORT), '--no-open'], { env: { ...process.env, DSH_HOME: HOME }, stdio: ['ignore', 'pipe', 'pipe'] })
 child.stdout.on('data', c => { log += String(c) }); child.stderr.on('data', c => { log += String(c) })
@@ -27,29 +28,28 @@ const lights = () => {
   for (const c of ['#ff5f57', '#febc2e', '#28c840']) { const s = document.createElement('span'); s.style.cssText = `width:12px;height:12px;border-radius:50%;background:${c};display:block`; row.append(s) }
   document.body.append(row)
 }
-// 任务列表夹具：自动化任务面板这里为空，用上游真实卡类名（Ww4dvW_card）造三张，仅用于判光强。
-const fixture = () => {
-  const col = document.querySelector("[class*='rightbarCol']")
-  if (col === null) return false
-  // 夹具：固定定位的三张任务卡（挂在 rightbarCol 里以满足样式作用域；位置 fixed 保证一定可见）
-  const host = document.createElement('div')
-  host.dataset.fixtureTasks = ''
-  host.style.cssText = 'position:fixed;right:24px;top:120px;width:420px;display:flex;flex-direction:column;gap:14px;z-index:2147483000'
-  for (const [title, meta, state] of [
-    ['Nightly dependency sweep', 'Daily · 02:00 · next in 6h', 'Enabled'],
-    ['Release notes digest', 'Weekly · Mon 09:00 · next in 2d', 'Enabled'],
-    ['Backup verify', 'Every 12h · next in 41m', 'Inactive'],
-  ]) {
-    const card = document.createElement('div')
-    card.className = 'Ww4dvW_card'
-    card.style.cssText = 'padding:14px 16px;border-radius:12px;background:#10151d'
-    card.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center">`
-      + `<div style="font:600 15px/1.4 system-ui;color:#e8eef7">${title}</div>`
-      + `<div style="font:500 11px/1 system-ui;color:#9fb0c2;letter-spacing:.06em">${state}</div></div>`
-      + `<div style="margin-top:6px;font:400 12.5px/1.4 system-ui;color:#8b98a8">${meta}</div>`
-    host.append(card)
-  }
-  col.append(host)
+// 夹具：按上游 ToolRow 的真实结构造一张 todo_write 卡（根上有 data-tool / data-variant / data-state）。
+const todoFixture = () => {
+  const host = document.querySelector("[class*='centerCol'] [class*='_root']") ?? document.querySelector("[class*='centerCol']")
+  if (host === null) return false
+  const wrap = document.createElement('div')
+  wrap.dataset.fixtureTodo = ''
+  wrap.style.cssText = 'position:fixed;left:360px;top:150px;width:560px;z-index:2147483000'
+  wrap.innerHTML = `
+    <div class="o3BgMG_root" data-tool="todo_write" data-variant="default" data-state="done" style="padding:10px 12px">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+        <span style="color:#8fb6d9">✓</span>
+        <span class="o3BgMG_title" style="font:500 13px/1.4 system-ui;color:#cfe0f0">Todo</span>
+        <span class="o3BgMG_sep"></span>
+        <span class="o3BgMG_summary" style="font:400 13px/1.4 system-ui;color:#8b98a8">3 items · 1 done</span>
+      </div>
+      <div class="o3BgMG_ioCard" style="margin-top:8px;padding:10px 12px">
+        <div style="font:400 12.5px/1.9 system-ui;color:#c8d3e0">
+          <div>☑ 写方案</div><div>☐ 实现</div><div>☐ 验证</div>
+        </div>
+      </div>
+    </div>`
+  host.append(wrap)
   return true
 }
 try {
@@ -67,15 +67,12 @@ try {
     if (css !== null) { await page.addStyleTag({ content: css }); await page.waitForTimeout(400) }
     await page.evaluate(lights)
     await page.screenshot({ path: join(OUT, `${prefix}-sidebar.png`), clip: { x: 0, y: 0, width: 620, height: 900 } })
-    // 不许发光的表面：输入框
     await page.screenshot({ path: join(OUT, `${prefix}-composer.png`), clip: { x: 860, y: 380, width: 580, height: 300 } })
-    // 任务卡（夹具）
-    // 先打开「Automation tasks」面板（任务卡就在这个抽屉里；空态下用夹具补三张真实卡类的卡）
-    await page.locator("button[class*='_panelRow']", { hasText: /Automation tasks|自动化任务/ }).first().click({ timeout: 5000 }).catch(() => {})
-    await page.waitForTimeout(1500)
-    const ok = await page.evaluate(fixture)
-    if (ok) { await page.waitForTimeout(300); await page.screenshot({ path: join(OUT, `${prefix}-tasks.png`), clip: { x: 940, y: 60, width: 500, height: 620 } }) }
-    else console.log(`${prefix}: 没找到 rightbarCol，任务卡夹具没挂上`)
+    const ok = await page.evaluate(todoFixture)
+    if (ok) {
+      await page.waitForTimeout(300)
+      await page.screenshot({ path: join(OUT, `${prefix}-taskcard.png`), clip: { x: 330, y: 110, width: 640, height: 340 } })
+    } else console.log(`${prefix}: 没找到对话容器，todo 夹具没挂上`)
     await ctx.close()
   }
   await shoot('baseline', null)

@@ -1,10 +1,9 @@
 /* ============================================================================
-   neon · 科幻化第二轮 · 方向 B ——「强发光 / 蓝边呼吸」（**范围收紧版**）
+   neon · 科幻化第二轮 · 方向 B ——「强发光 / 蓝边呼吸」（范围：两处）
    ----------------------------------------------------------------------------
-   范围与 A 完全相同（只左侧栏边框 + 任务列表卡片），强度再上一档：
-   · 环 3px，中晕 34px、远晕 88px；
-   · 任务卡 hover 时有 2.6s 的缓慢呼吸（只在 no-preference 下）；
-   · 其余表面**一律不碰**：输入框、会话胶囊、工作区行、面板行、焦点环全部保持原样。
+   范围与 A 相同：① 左侧栏卡片边框 ② 对话流里的待办 / 计划卡（`[data-tool='todo_write']`）。
+   强度再上一档：环 3px，中晕 34/28px，远晕 88/68px；待办卡 hover 时 2.6s 呼吸。
+   其余表面一律不碰 —— 这是用户的明确约束，别"顺手"扩散。
    ========================================================================== */
 
 html[data-fly-palette='neon'] {
@@ -24,9 +23,9 @@ html[data-fly-palette='neon'] body[data-ds-dark-theme] [class$='_frame']:has(> [
     inset 0 0 34px -6px var(--fly-glow-inner);
 }
 
-/* ② 任务列表卡片 */
-html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='rightbarCol'] [class*='_card'],
-html[data-fly-palette='neon'] body[data-ds-dark-theme] [data-session-schedule-task] {
+/* ② 待办 / 计划卡 */
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [data-tool='todo_write'] {
+  border-radius: 12px;
   box-shadow:
     0 0 0 3px var(--fly-glow-ring),
     0 0 28px 2px var(--fly-glow-near),
@@ -34,9 +33,8 @@ html[data-fly-palette='neon'] body[data-ds-dark-theme] [data-session-schedule-ta
     inset 0 0 24px -6px var(--fly-glow-inner);
 }
 
-/* ③ 任务卡 hover：更亮 + 呼吸（只动光晕，不动环宽） */
-html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='rightbarCol'] [class*='_card']:hover,
-html[data-fly-palette='neon'] body[data-ds-dark-theme] [data-session-schedule-task]:hover {
+/* ③ hover：更亮 + 呼吸（只动光晕，不动环宽） */
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [data-tool='todo_write']:hover {
   box-shadow:
     0 0 0 3px var(--fly-glow-core),
     0 0 36px 4px var(--fly-glow-near),
@@ -45,8 +43,7 @@ html[data-fly-palette='neon'] body[data-ds-dark-theme] [data-session-schedule-ta
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='rightbarCol'] [class*='_card']:hover,
-  html[data-fly-palette='neon'] body[data-ds-dark-theme] [data-session-schedule-task]:hover {
+  html[data-fly-palette='neon'] body[data-ds-dark-theme] [data-tool='todo_write']:hover {
     animation: fly-glow-task-breathe 2.6s ease-in-out infinite;
   }
   @keyframes fly-glow-task-breathe {
