@@ -1,0 +1,22 @@
+{
+  "title": "neon 科幻化第二轮 · 强发光（蓝边加粗 + 光晕加强）",
+  "variants": [
+    {
+      "id": "strong",
+      "css": "variant-a-strong.css",
+      "tokens": "NEON_GLOW_STRONG"
+    },
+    {
+      "id": "pulse",
+      "css": "variant-b-pulse.css",
+      "tokens": "NEON_GLOW_PULSE"
+    }
+  ],
+  "aliases": {
+    "--fly-glow-core": "--dsw-specific-fly-glow-core",
+    "--fly-glow-ring": "--dsw-specific-fly-glow-ring",
+    "--fly-glow-near": "--dsw-specific-fly-glow-near",
+    "--fly-glow-far": "--dsw-specific-fly-glow-far",
+    "--fly-glow-inner": "--dsw-specific-fly-glow-inner"
+  }
+}

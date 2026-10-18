@@ -1,0 +1,81 @@
+/* ============================================================================
+   neon · 科幻化第二轮 · 方向 A ——「强发光 / 蓝边常亮」
+   ----------------------------------------------------------------------------
+   方向按用户给的两个参考点：
+   ① 发光类组件（任务栏列表卡 / 输入卡）——蓝色发光边框**加粗**（2px 实环）、外光晕**加强**；
+   ② 左侧会话栏的卡片边框也吃同一套发光（蓝边 + 外光晕 + 极淡内辉）。
+
+   实现手法：一律用 `box-shadow` 叠环（0 0 0 Npx 不加布局），不写 border —— 改 border 会挪内容。
+   光晕分三层：近环（0 0 0 2px）+ 中晕（0 0 18px）+ 远晕（0 0 46px），内辉一层 inset。
+
+   锚点：`sidebarCol` / `sessionRow` / `projectRow` / `panelRow` / `composerStack [class*='_card']`
+   / `_ioCard`。不写死 hash。
+   ========================================================================== */
+
+html[data-fly-palette='neon'] {
+  --fly-glow-core: rgba(96, 200, 255, 0.92);
+  --fly-glow-ring: rgba(58, 168, 255, 0.62);
+  --fly-glow-near: rgba(46, 146, 255, 0.38);
+  --fly-glow-far: rgba(34, 118, 255, 0.22);
+  --fly-glow-inner: rgba(96, 200, 255, 0.10);
+}
+
+/* ① 侧栏卡：蓝边 + 三层光晕 + 内辉 */
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class$='_frame']:has(> [class*='sidebarCol']) [class*='sidebarCol'] {
+  box-shadow:
+    0 0 0 2px var(--fly-glow-ring),
+    0 0 22px 2px var(--fly-glow-near),
+    0 0 56px 6px var(--fly-glow-far),
+    inset 0 0 26px -6px var(--fly-glow-inner);
+}
+
+/* ② 会话行 / 工作区行：蓝色发光边框（选中更亮、常态也带一层） */
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='sessionRow']:not([class*='selected']),
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='projectRow'] {
+  box-shadow:
+    0 0 0 1px var(--fly-glow-ring),
+    0 0 12px -2px var(--fly-glow-near);
+  border-radius: 10px;
+}
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='sessionRow'][class*='selected'] {
+  box-shadow:
+    0 0 0 2px var(--fly-glow-core),
+    0 0 18px 0 var(--fly-glow-near),
+    0 0 42px 4px var(--fly-glow-far),
+    inset 0 0 18px -4px var(--fly-glow-inner);
+}
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='sessionRow']:hover:not([class*='selected']),
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='projectRow']:hover {
+  box-shadow:
+    0 0 0 2px var(--fly-glow-ring),
+    0 0 20px 0 var(--fly-glow-near),
+    0 0 44px 2px var(--fly-glow-far);
+}
+
+/* ③ 面板行（Plugins / Automation tasks）：hover 才点亮，避免整栏全是圈 */
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='_panelRow'] {
+  border-radius: 10px;
+}
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='_panelRow']:hover {
+  box-shadow:
+    0 0 0 1px var(--fly-glow-ring),
+    0 0 16px -2px var(--fly-glow-near);
+}
+
+/* ④ 输入卡（Describe what…）：换成蓝光（现有是琥珀光圈），边更亮、晕更远 */
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='composerStack'] [class*='_card'],
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='_ioCard'] {
+  box-shadow:
+    0 0 0 2px var(--fly-glow-ring),
+    0 0 26px 2px var(--fly-glow-near),
+    0 0 64px 8px var(--fly-glow-far),
+    inset 0 0 22px -6px var(--fly-glow-inner);
+}
+
+/* ⑤ 键盘焦点沿用同一套光 */
+html[data-fly-palette='neon'] body[data-ds-dark-theme] :is(button, a, [role='button'], input, textarea):focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 2px var(--fly-glow-core),
+    0 0 20px 0 var(--fly-glow-near);
+}

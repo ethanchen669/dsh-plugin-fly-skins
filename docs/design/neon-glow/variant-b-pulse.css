@@ -1,0 +1,107 @@
+/* ============================================================================
+   neon · 科幻化第二轮 · 方向 B ——「强发光 / 蓝边呼吸」
+   ----------------------------------------------------------------------------
+   与 A 同一骨架，强度再上一档：
+   · 环 3px（`0 0 0 3px`），中晕 34px、远晕 88px，光更"外溢"；
+   · 侧栏卡与选中行带**呼吸**（4.2s，halo 在 60%–100% 之间摆，不闪）；
+   · 输入卡 / 工具卡 hover 时向外扩一圈；
+   · 全部在 prefers-reduced-motion: no-preference 下才动。
+   ========================================================================== */
+
+html[data-fly-palette='neon'] {
+  --fly-glow-core: rgba(120, 214, 255, 0.95);
+  --fly-glow-ring: rgba(58, 168, 255, 0.72);
+  --fly-glow-near: rgba(46, 146, 255, 0.48);
+  --fly-glow-far: rgba(34, 118, 255, 0.28);
+  --fly-glow-inner: rgba(120, 214, 255, 0.14);
+}
+
+/* ① 侧栏卡：3px 环 + 大光晕（呼吸） */
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class$='_frame']:has(> [class*='sidebarCol']) [class*='sidebarCol'] {
+  box-shadow:
+    0 0 0 3px var(--fly-glow-ring),
+    0 0 34px 4px var(--fly-glow-near),
+    0 0 88px 10px var(--fly-glow-far),
+    inset 0 0 34px -6px var(--fly-glow-inner);
+}
+
+/* ② 会话行 / 工作区行 */
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='sessionRow']:not([class*='selected']),
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='projectRow'] {
+  box-shadow:
+    0 0 0 2px var(--fly-glow-ring),
+    0 0 18px -2px var(--fly-glow-near);
+  border-radius: 10px;
+}
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='sessionRow'][class*='selected'] {
+  box-shadow:
+    0 0 0 3px var(--fly-glow-core),
+    0 0 30px 2px var(--fly-glow-near),
+    0 0 64px 8px var(--fly-glow-far),
+    inset 0 0 24px -4px var(--fly-glow-inner);
+}
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='sessionRow']:hover:not([class*='selected']),
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='projectRow']:hover {
+  box-shadow:
+    0 0 0 3px var(--fly-glow-ring),
+    0 0 28px 2px var(--fly-glow-near),
+    0 0 60px 4px var(--fly-glow-far);
+}
+
+/* ③ 面板行 hover 点亮 */
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='_panelRow'] {
+  border-radius: 10px;
+}
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='_panelRow']:hover {
+  box-shadow:
+    0 0 0 2px var(--fly-glow-ring),
+    0 0 22px 0 var(--fly-glow-near);
+}
+
+/* ④ 输入卡 / 工具卡：3px 环 + 远晕，hover 再外扩 */
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='composerStack'] [class*='_card'],
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='_ioCard'] {
+  box-shadow:
+    0 0 0 3px var(--fly-glow-ring),
+    0 0 36px 4px var(--fly-glow-near),
+    0 0 92px 12px var(--fly-glow-far),
+    inset 0 0 28px -6px var(--fly-glow-inner);
+}
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='composerStack'] [class*='_card']:focus-within,
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='_ioCard']:hover {
+  box-shadow:
+    0 0 0 3px var(--fly-glow-core),
+    0 0 44px 6px var(--fly-glow-near),
+    0 0 110px 14px var(--fly-glow-far);
+}
+
+/* ⑤ 焦点 */
+html[data-fly-palette='neon'] body[data-ds-dark-theme] :is(button, a, [role='button'], input, textarea):focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 3px var(--fly-glow-core),
+    0 0 28px 0 var(--fly-glow-near);
+}
+
+/* ⑥ 呼吸（选中行 + 侧栏卡），幅度只在光晕上，环的粗细不动 */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='sessionRow'][class*='selected'] {
+    animation: fly-glow-breathe 4.2s ease-in-out infinite;
+  }
+  @keyframes fly-glow-breathe {
+    0%, 100% {
+      box-shadow:
+        0 0 0 3px var(--fly-glow-core),
+        0 0 22px 0 rgba(46, 146, 255, 0.34),
+        0 0 52px 4px rgba(34, 118, 255, 0.20),
+        inset 0 0 20px -4px var(--fly-glow-inner);
+    }
+    60% {
+      box-shadow:
+        0 0 0 3px var(--fly-glow-core),
+        0 0 34px 4px var(--fly-glow-near),
+        0 0 76px 10px var(--fly-glow-far),
+        inset 0 0 26px -4px var(--fly-glow-inner);
+    }
+  }
+}

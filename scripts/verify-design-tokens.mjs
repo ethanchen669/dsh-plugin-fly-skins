@@ -10,29 +10,30 @@
  * 解析出 `--fly-hud-*` 的值，与 TS 里 `NEON_SCIFI_*` 的同义 token 值**逐字节相等**；
  * canvas / plate 三颗同样比。缺一侧就大声红（不跳过）。
  *
+ * 发现规则：`docs/design/<名字>/design.json` 里登记 `variants`（id / css / tokens 导出名）
+ * 与 `aliases`（设计稿名 → 入库名）。新增一轮设计只要放一份 design.json，不改编排脚本。
+ *
  * 用法：`node scripts/verify-design-tokens.mjs`（皮肤仓根目录；退出码 0 = 一致）
  */
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
-const DESIGN = join(ROOT, 'docs/design/neon-scifi')
+const DESIGN_ROOT = join(ROOT, 'docs/design')
 
-/** 设计稿名 → 入库名（与 README §4.1 的表一致）。 */
-const ALIASES = {
-  '--fly-hud-line': '--dsw-specific-fly-hud-line',
-  '--fly-hud-line-soft': '--dsw-specific-fly-hud-line-soft',
-  '--fly-hud-glow': '--dsw-specific-fly-hud-glow',
-  '--fly-hud-warm': '--dsw-specific-fly-hud-warm',
-  '--fly-hud-ink': '--dsw-specific-fly-hud-ink',
+/** 每一轮设计一个目录：`design.json` 登记该轮的变体与别名表。 */
+const designs = readdirSync(DESIGN_ROOT, { withFileTypes: true })
+  .filter(entry => entry.isDirectory() && existsSync(join(DESIGN_ROOT, entry.name, 'design.json')))
+  .map(entry => {
+    const dir = join(DESIGN_ROOT, entry.name)
+    const manifest = JSON.parse(readFileSync(join(dir, 'design.json'), 'utf8'))
+    return { name: entry.name, dir, manifest }
+  })
+if (designs.length === 0) {
+  console.error('✗ docs/design 下没有任何 design.json')
+  process.exit(4)
 }
-
-/** 两个方向：CSS 文件 + TS 导出名。 */
-const VARIANTS = [
-  { id: 'hud', css: 'variant-a-hud.css', tsName: 'NEON_SCIFI_HUD' },
-  { id: 'ember', css: 'variant-b-ember.css', tsName: 'NEON_SCIFI_EMBER' },
-]
 
 /** 归一化空白：CSS 里的多行值在 TS 里是单行字符串拼接，空白不参与比较。 */
 const norm = value => value.replace(/\s+/gu, ' ').trim()
@@ -96,22 +97,28 @@ function tokenObject(source, exportName) {
   return out
 }
 
-const tokensSource = readFileSync(join(DESIGN, 'neon-scifi.tokens.ts'), 'utf8')
 const problems = []
 const checked = []
 
-for (const variant of VARIANTS) {
-  const css = readFileSync(join(DESIGN, variant.css), 'utf8')
-  const fromCss = declarations(paletteBlock(css))
-  const fromTs = tokenObject(tokensSource, variant.tsName)
+for (const design of designs) {
+  const tokensFile = readdirSync(design.dir).find(name => name.endsWith('.tokens.ts'))
+  if (tokensFile === undefined) { problems.push(`${design.name}: 缺 *.tokens.ts`); continue }
+  const tokensSource = readFileSync(join(design.dir, tokensFile), 'utf8')
+  const aliases = design.manifest.aliases ?? {}
 
-  for (const [designName, storedName] of Object.entries(ALIASES)) {
-    const cssValue = fromCss.get(designName)
-    const tsValue = fromTs.get(storedName)
-    if (cssValue === undefined) { problems.push(`${variant.css}: 缺 ${designName}`); continue }
-    if (tsValue === undefined) { problems.push(`neon-scifi.tokens.ts: ${variant.tsName} 缺 ${storedName}`); continue }
-    checked.push(`${variant.id}:${designName}`)
-    if (cssValue !== tsValue) problems.push(`${variant.id} ${designName} 不一致\n  CSS: ${cssValue}\n  TS : ${tsValue}`)
+  for (const variant of design.manifest.variants ?? []) {
+    const css = readFileSync(join(design.dir, variant.css), 'utf8')
+    const fromCss = declarations(paletteBlock(css))
+    const fromTs = tokenObject(tokensSource, variant.tokens)
+
+    for (const [designName, storedName] of Object.entries(aliases)) {
+      const cssValue = fromCss.get(designName)
+      const tsValue = fromTs.get(storedName)
+      if (cssValue === undefined) { problems.push(`${design.name}/${variant.css}: 缺 ${designName}`); continue }
+      if (tsValue === undefined) { problems.push(`${design.name}/${tokensFile}: ${variant.tokens} 缺 ${storedName}`); continue }
+      checked.push(`${design.name}/${variant.id}:${designName}`)
+      if (cssValue !== tsValue) problems.push(`${design.name}/${variant.id} ${designName} 不一致\n  CSS: ${cssValue}\n  TS : ${tsValue}`)
+    }
   }
 }
 
@@ -121,4 +128,4 @@ if (problems.length > 0) {
   process.exit(4)
 }
 
-console.log(`ok  设计稿与入库 token 一致（${VARIANTS.length} 方向 × ${Object.keys(ALIASES).length} 颗 HUD token = ${checked.length} 项）`)
+console.log(`ok  设计稿与入库 token 一致（${designs.length} 轮设计 / ${checked.length} 项）`)

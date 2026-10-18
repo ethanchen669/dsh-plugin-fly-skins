@@ -1,0 +1,22 @@
+{
+  "title": "neon 科幻化第一轮 · HUD / EMBER（网格场 + 取景框）",
+  "variants": [
+    {
+      "id": "hud",
+      "css": "variant-a-hud.css",
+      "tokens": "NEON_SCIFI_HUD"
+    },
+    {
+      "id": "ember",
+      "css": "variant-b-ember.css",
+      "tokens": "NEON_SCIFI_EMBER"
+    }
+  ],
+  "aliases": {
+    "--fly-hud-line": "--dsw-specific-fly-hud-line",
+    "--fly-hud-line-soft": "--dsw-specific-fly-hud-line-soft",
+    "--fly-hud-glow": "--dsw-specific-fly-hud-glow",
+    "--fly-hud-warm": "--dsw-specific-fly-hud-warm",
+    "--fly-hud-ink": "--dsw-specific-fly-hud-ink"
+  }
+}
