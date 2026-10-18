@@ -105,7 +105,19 @@ const RECIPE_NOOP = {
 } as const
 
 /** Dark half of the solid palette: the Fly battle-room colours. */
+/** 强发光关闭态：非 neon（以及 neon 浅色半区）也必须有这 5 个名字。
+ *  契约断言「每个调色板画同一套 token」是按名字集合比的 —— 只在 neon 深色里加
+ *  5 个键，neon 的键数就比别人多 5，contract.spec 当场红（实测 90 !== 85）。 */
+const GLOW_OFF = {
+  '--dsw-specific-fly-glow-core': 'transparent',
+  '--dsw-specific-fly-glow-ring': 'transparent',
+  '--dsw-specific-fly-glow-near': 'transparent',
+  '--dsw-specific-fly-glow-far': 'transparent',
+  '--dsw-specific-fly-glow-inner': 'transparent',
+} as const
+
 const SOLID_DARK = {
+  ...GLOW_OFF,
   ...RECIPE_NOOP,
   '--dsw-alias-bg-base': '#070b12',
   '--dsw-alias-bg-layer-1': '#0d131c',
@@ -303,6 +315,7 @@ const SOLID_DARK = {
  * (The palette's gold lives in the accent and the brand assets, not in the
  * desk.) */
 const SOLID_LIGHT = {
+  ...GLOW_OFF,
   ...RECIPE_NOOP,
   '--dsw-alias-bg-base': '#f1f3f5',
   '--dsw-alias-bg-layer-1': '#ffffff',
@@ -457,6 +470,7 @@ const SOLID_LIGHT = {
  * reads the composited surface, so it sees the translucency rather than the hex.
  */
 const GLASS_DARK = {
+  ...GLOW_OFF,
   ...SOLID_DARK,
   '--dsw-alias-bg-layer-1': 'rgba(255, 255, 255, 0.045)',
   '--dsw-alias-bg-layer-2': 'rgba(19, 27, 40, 0.42)',
@@ -493,6 +507,7 @@ const GLASS_DARK = {
 
 /** Glass half for the light scheme; see {@link GLASS_DARK}. */
 const GLASS_LIGHT = {
+  ...GLOW_OFF,
   ...SOLID_LIGHT,
   '--dsw-alias-bg-layer-1': 'rgba(249, 250, 252, 0.66)',
   '--dsw-alias-bg-layer-2': 'rgba(235, 237, 239, 0.82)',
@@ -564,6 +579,7 @@ const GLASS_LIGHT = {
  * *glow*; the text itself never does (asserted: no text-shadow, no filter).
  */
 const VOLUME_DARK = {
+  ...GLOW_OFF,
   ...GLASS_DARK,
   // Self-emission: the halo a working element casts around itself. Strength only —
   // which element wears which hue is decided in styles.ts (data-fly-glow and the
@@ -633,6 +649,7 @@ const VOLUME_DARK = {
  * the values move here and the light rules get written against them.
  */
 const VOLUME_LIGHT = {
+  ...GLOW_OFF,
   ...GLASS_LIGHT,
 } as const
 
@@ -673,6 +690,15 @@ const NEON_DARK = {
   // their solid plate from a scoped rule in styles.ts instead, so the panel
   // identity and the readable-card requirement stop fighting over one token.
   '--dsw-specific-menu': 'rgba(6, 10, 18, 0.97)',
+  // 强发光（2026-10-18 用户裁决：方案 A「常亮」，B 的 3px 边框过粗被否）。
+  // 只给两处：左侧栏卡边框 + 对话里的待办卡（[data-tool='todo_write']）。
+  // 设计稿与依据：docs/design/neon-glow/README.md（token 名与值由
+  // scripts/verify-design-tokens.mjs 逐字节比对）。
+  '--dsw-specific-fly-glow-core': 'rgba(96, 200, 255, 0.92)',
+  '--dsw-specific-fly-glow-ring': 'rgba(58, 168, 255, 0.62)',
+  '--dsw-specific-fly-glow-near': 'rgba(46, 146, 255, 0.38)',
+  '--dsw-specific-fly-glow-far': 'rgba(34, 118, 255, 0.22)',
+  '--dsw-specific-fly-glow-inner': 'rgba(96, 200, 255, 0.10)',
 } as const
 
 /**
