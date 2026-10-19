@@ -1083,11 +1083,13 @@ ${NEON_LIGHT_SCOPE} [class$='_frame']:not([data-sidebar-collapsed]) > [class*='s
    浅色方言照旧不发光：只把描边换成深青棱镜色。 */
 ${NEON_DARK_SCOPE} section[class$='_root']:has([class*='_progress']),
 ${NEON_DARK_SCOPE} [class$='_bar']:has([class*='goalGlyph'])  {
-  --dsw-elevation-stroke: 0 0 0 1px rgba(53, 211, 224, 0.55);
+  /* 2026-10-19 用户裁决：颜色保持这颗霓虹青不动，只**加强**——环 1px@.55 → 1.5px@.78，
+     光晕 16/40px → 22/52px（浓度 .40/.22，半径加大）。T10 原本的声明保留在注释里备查。 */
+  --dsw-elevation-stroke: 0 0 0 1.5px rgba(53, 211, 224, 0.78);
   box-shadow:
     var(--dsw-elevation-panel),
-    0 0 16px -2px rgba(53, 211, 224, 0.4),
-    0 0 40px -8px rgba(53, 211, 224, 0.26);
+    0 0 22px 2px rgba(53, 211, 224, 0.4),
+    0 0 52px 6px rgba(53, 211, 224, 0.22);
 }
 ${NEON_LIGHT_SCOPE} section[class$='_root']:has([class*='_progress']),
 ${NEON_LIGHT_SCOPE} [class$='_bar']:has([class*='goalGlyph'])  {

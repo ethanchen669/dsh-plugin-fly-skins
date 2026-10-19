@@ -12,14 +12,16 @@
 | 表面 | 发光 | 钩子 | 依据 |
 | --- | --- | --- | --- |
 | 左侧栏卡片边框 | ✅ | `[class$='_frame']:has(> [class*='sidebarCol']) [class*='sidebarCol']` | 已有钩子 |
-| 对话流的待办 / 计划卡 | ✅ | **`[data-tool='todo_write']`** | 上游 `dsh-client-ui-tool` 的 `ToolRow` 根节点带 `data-tool={toolName}`（源码实证，不用哈希类名） |
+| 底部「任务」卡（TodoPanel） | ✅ **青（它自己的颜色）** | `section[class$='_root']:has([class*='_progress'])`（T10 既有规则） | 上游 `TodoPanel` 原创的 1px 边就是霓虹青 `rgba(53,211,224,.55)`（`--dsw-elevation-panel` 的 stroke 层）。**不加 running 蓝**：把 T10 那条 1px@.55 + 16/40px 的晕加强成 1.5px@.78 + 22/52px，色相不动 |
+| 对话里的 `todo_write` 工具行 | ✅（可选） | `[data-tool='todo_write']` | 上游 `ToolRow` 根节点的 `data-tool`；与上面那张卡是两个不同的面 |
 | 工作区输入框（composer） | ❌ | —— | 保持原生暖光（见 `shots/*-composer.png`） |
 | 会话选中胶囊 / 工作区行 / 面板行 | ❌ | —— | 保持原生 |
 | 自动化任务抽屉里的卡 | ❌ | —— | 上一版误把它当成"任务列表卡"，已撤掉 |
 | 键盘焦点环 | ❌ | —— | 不改动 |
 
-> 术语对齐：**"任务列表卡" = 对话里 `todo_write` 工具渲染的那张待办 / 计划卡**，不是右侧抽屉
-> 「Automation tasks」面板，也不是会话 hover 的小任务条。
+> 术语对齐（第四次纠正，2026-10-19 用户截图确认）：**"任务列表卡" = 对话底部那张
+> `TodoPanel`（标题「任务 · 1 进行中 · 6 待处理」）**，不是 `todo_write` 工具行、
+> 不是右侧抽屉「Automation tasks」、也不是会话 hover 的小任务条。
 
 ## 2. 做法
 
