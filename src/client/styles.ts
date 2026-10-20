@@ -993,6 +993,18 @@ html[data-fly-palette='neon'] [class$='_frame']:not([data-sidebar-collapsed]) > 
   border-radius: 16px;
   backdrop-filter: blur(18px) saturate(150%);
 }
+/* 深色下把栏卡做成**真·黑底材质**（2026-10-20 用户裁决）。
+   起因：卡片是半透明（fill 0.72）+ backdrop blur + saturate(1.5)，观感取决于身后那层 ——
+   dsh-fly 身后是深色画布（读成黑底），官方 Desktop 身后是 macOS vibrancy（蓝灰，读成深蓝底）。
+   实测：官方卡 rgb(9,22,41)、我们 rgb(12,15,20)（B−R 差 +23~32）。
+   用户在两者之间**明确选择黑底**，所以这里两件事：
+   ① 填充抬到 .95 的近中性黑（身后是什么几乎不再影响读色）；
+   ② 模糊饱和度 1.5 → 1.1（不再把身后的蓝放大）。
+   只作用于深色半区的栏卡；主工作区画布、边框环与光晕一律不动。 */
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class$='_frame']:not([data-sidebar-collapsed]) > [class*='sidebarCol']  {
+  background-color: rgba(6, 10, 16, 0.95);
+  backdrop-filter: blur(18px) saturate(1.1);
+}
 /* 栏卡里的内容根还钉着轨道宽：上游侧栏根（sidebar 包）的宽度是行内样式
    style={{width: 轨道宽}}（拖拽时 JS 逐帧改写，见 dsh-client-ui-sidebar/
    lib/client.js:299），卡内缩之后它照旧 280，整条负 margin 满 bleed 链
