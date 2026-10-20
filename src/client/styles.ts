@@ -988,13 +988,25 @@ html[data-fly-palette='neon'] [class*='centerCol']  {
 /* 栏卡几何（两个半区同形）。描边用整条 border 而不是只改右缘：全 palette 的
    栏规则写的是 border-right 发丝，卡片要的是一整圈环；同时 verify 那条「栏保留
    工作台发丝线」断 borderRightWidth/Style == 1px/solid，整圈环下它照旧成立。 */
-/* 官方 Desktop 的整页基准 125%（2026-10-20 用户裁决：两边侧栏都是 125%）。
-   dsh-fly 由壳把窗口 zoomFactor 钉在 1.25（侧栏因此是 125%），中区/右抽屉再按用户档位
-   相对缩放；官方 Desktop 没有壳，只能在页面层给同一条基准：data-platform='darwin'
-   是官方 preload 打的标记，我们的壳与 web 都没有它，所以这条只对官方桌面生效。
-   实测（web 面复刻同一规则）：侧栏 280 → 350、输入卡 712 → 881、无横向滚动。 */
-html[data-platform='darwin']  {
-  zoom: 1.25;
+/* 左侧栏字体 125%（2026-10-20 用户裁决：左栏保持 100% 宽，只把字放大 ——
+   "我要 125% 是因为字体更大、看得更清楚"，不是要把栏变宽）。
+
+   实测（web 面）：
+     基线             Plugins 47×22 / Workspaces 79×20 / More 33×20，栏宽 280
+     font-size 17.5px  Plugins 57×25 / Workspaces 96×25 / More 40×25，栏宽 **280 不变**
+
+   为什么用这五个局部名（[class*='_x'] 而不是 $=）：上游类名带尾随空格
+   （hHd-Xa_panelTitle 后面还有一个空格），$= 一个都命中不了（第一版就撞了）。
+   覆盖范围按侧栏里所有文字族枚举过：newSessionLabel / panelTitle / sectionLabel /
+   title（工作区与会话行）/ label（More 等）。
+   上游改名时这条会静默失效 —— 所以 verify-shell 里另有一条断言盯着侧栏字号 > 16px。 */
+[class*='sidebarCol'] [class*='_panelTitle'],
+[class*='sidebarCol'] [class*='_sectionLabel'],
+[class*='sidebarCol'] [class*='_newSessionLabel'],
+[class*='sidebarCol'] [class*='_title'],
+[class*='sidebarCol'] [class*='_label']  {
+  font-size: 17.5px;
+  line-height: 1.4;
 }
 html[data-fly-palette='neon'] [class$='_frame']:not([data-sidebar-collapsed]) > [class*='sidebarCol']  {
   margin: 12px;
