@@ -988,6 +988,14 @@ html[data-fly-palette='neon'] [class*='centerCol']  {
 /* 栏卡几何（两个半区同形）。描边用整条 border 而不是只改右缘：全 palette 的
    栏规则写的是 border-right 发丝，卡片要的是一整圈环；同时 verify 那条「栏保留
    工作台发丝线」断 borderRightWidth/Style == 1px/solid，整圈环下它照旧成立。 */
+/* 官方 Desktop 的整页基准 125%（2026-10-20 用户裁决：两边侧栏都是 125%）。
+   dsh-fly 由壳把窗口 zoomFactor 钉在 1.25（侧栏因此是 125%），中区/右抽屉再按用户档位
+   相对缩放；官方 Desktop 没有壳，只能在页面层给同一条基准：data-platform='darwin'
+   是官方 preload 打的标记，我们的壳与 web 都没有它，所以这条只对官方桌面生效。
+   实测（web 面复刻同一规则）：侧栏 280 → 350、输入卡 712 → 881、无横向滚动。 */
+html[data-platform='darwin']  {
+  zoom: 1.25;
+}
 html[data-fly-palette='neon'] [class$='_frame']:not([data-sidebar-collapsed]) > [class*='sidebarCol']  {
   margin: 12px;
   border-radius: 16px;
