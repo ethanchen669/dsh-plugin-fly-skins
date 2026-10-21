@@ -42,6 +42,8 @@
  * the one thing the extraction changed — the `.fly-*` half went to the shell.
  */
 
+import { MISANS_LATIN_FACES } from './fonts'
+
 const BASH_INNER_CARD = [
   "[class$='_card']:has(> [data-sample]) [class$='_terminal']",
   "[class$='_card']:has(> [data-sample]) [class*='_terminal ']",
@@ -985,6 +987,80 @@ html[data-fly-palette='neon'] [class*='centerCol']  {
   background-color: transparent;
   border-left: none;
 }
+
+/* ── 霓虹扫描线（2026-10-21 用户裁决 B：单向扫掠）──────────────────────────────
+   借鉴 @Tommy00748/dsh-theme-cyberpunk2077 的 Kiroshi 扫描线：1px 青色激光 +
+   线性尾迹。原版只扫会话行的 hover（1.5s/次）；放到整块主工作区后，1.5s 会变成
+   频闪，所以这里放慢到 16s 一程，两端各留 7% 静默（线已在屏外，重播看不出来）。
+   线画在中列根节点的 background 上，也就是消息与卡片的**下面** —— 它扫过文字时
+   不会糊字。只做深色半区：浅色白底上扫线会显脏；prefers-reduced-motion 与小屏
+   一律关闭。
+   选择器与上面「中列/右列 _root 退成透明」那条同形，但只取 centerCol；声明在
+   后面，所以它盖过同一元素上的 background-image: none。 */
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class$='_root']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root ']),
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class*='_root ']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root '])  {
+  background-image: linear-gradient(180deg,
+    rgba(53, 211, 224, 0) 0%,
+    rgba(53, 211, 224, 0) 44%,
+    rgba(53, 211, 224, 0.018) 68%,
+    rgba(53, 211, 224, 0.07) 86%,
+    rgba(90, 225, 245, 0.22) 96.5%,
+    rgba(175, 248, 255, 0.58) 99.4%,
+    rgba(175, 248, 255, 0) 100%);
+  background-size: 100% 220px;
+  background-repeat: no-repeat;
+  background-position: 0 -240px;
+  animation: fly-neon-scan 16s linear infinite;
+}
+@keyframes fly-neon-scan {
+  0%, 7% { background-position: 0 -240px; }
+  93%, 100% { background-position: 0 calc(100% + 20px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class$='_root']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root ']),
+  html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class*='_root ']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root '])  {
+    animation: none;
+    background-image: none;
+  }
+}
+@media (max-width: 768px) {
+  html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class$='_root']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root ']),
+  html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class*='_root ']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root '])  {
+    animation: none;
+    background-image: none;
+  }
+}
+
+/* ── 霓虹字体（2026-10-21 用户裁决 T1：MiSans Latin + HUD）────────────────────
+   参考主题用 MiSans 承担整个 UI；全量 CJK 是约 45MB 分片，桌面端不能这么干。
+   这里只内置 Latin 三字重（fonts.ts，约 166KB，Apache-2.0），中文回落到用户
+   自己的字体设置：--dsh-font-family-text 是上游字体设置写的那颗，保留它作为
+   回落，等于「拉丁用 MiSans、中文听用户的」。
+   HUD 只借三件事：按钮/面板标题 600 + 0.04em、section label 500、数字 tabular；
+   不做 uppercase —— 实测 17.5px 侧栏里 WORKSPACES 会被右侧图标按钮挤到裁字。
+   只作用于 neon；solid / glass / volume 的像素与字体保持冻结。 */
+html[data-fly-palette='neon'] body  {
+  --dsw-font-family: 'MiSans Latin', var(--dsh-font-family-text, var(--dsh-font-family-text-default, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif));
+  font-variant-numeric: tabular-nums;
+}
+html[data-fly-palette='neon'] button,
+html[data-fly-palette='neon'] [class*='_newSessionLabel'],
+html[data-fly-palette='neon'] [class*='_panelTitle']  {
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+html[data-fly-palette='neon'] [class*='_sectionLabel']  {
+  font-weight: 500;
+}
+html[data-fly-palette='neon'] [class*='_newSessionShortcut'],
+html[data-fly-palette='neon'] [class*='_time'],
+html[data-fly-palette='neon'] [class*='_count'],
+html[data-fly-palette='neon'] [class*='_meta']  {
+  font-family: var(--ds-font-family-code);
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
 /* 栏卡几何（两个半区同形）。描边用整条 border 而不是只改右缘：全 palette 的
    栏规则写的是 border-right 发丝，卡片要的是一整圈环；同时 verify 那条「栏保留
    工作台发丝线」断 borderRightWidth/Style == 1px/solid，整圈环下它照旧成立。 */
@@ -1311,4 +1387,8 @@ html[data-fly-palette='volume'] body:not([data-ds-dark-theme]) [class*='_preview
   font-size: 12px;
   line-height: 1.5;
 }
+
+/* The vendored MiSans Latin faces. Kept at the end of the sheet so the palette
+   rules above stay readable; @font-face is order-independent. */
+${MISANS_LATIN_FACES}
 `

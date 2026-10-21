@@ -57,6 +57,30 @@ It works standalone: install the skin without the Fly workbench and you get the 
 Fly colours; install the workbench without the skin and you get the official look plus the
 workbench.
 
+## Neon scanline and typography (0.2.0)
+
+The neon dark half carries a slow **one-way scanline**: a 1px cyan laser with a soft tail, painted
+on the centre column's background — i.e. *behind* messages and cards, so it never washes over text.
+It sweeps for about 16 seconds, holds offscreen at both ends, and restarts invisibly. The light half
+does not scan (a moving line on a white field reads as dirt), and the layer is removed entirely under
+`prefers-reduced-motion: reduce` and on screens at or below 768px.
+
+**霓虹深色半区新增一条单向扫描线**：1px 青色激光 + 柔尾迹，画在中列背景、消息与卡片的**下面**；
+约 16 秒扫完一程，两端在屏外静默后重播。浅色半区不扫（白底上会显脏），
+`prefers-reduced-motion` 与 ≤768px 小屏自动关闭。
+
+The Latin chrome now uses **MiSans Latin** (three weights, about 166 KB, embedded in the client
+bundle, Apache-2.0; see `LICENSES/`). Buttons and panel titles take weight 600 and 0.04em tracking,
+section labels weight 500, and numbers are tabular. Chinese text keeps the user's own font setting —
+the full MiSans CJK family is about 45 MB of sharded woff2, which a desktop security tool should not
+download or carry. The family is scoped to neon; solid / glass / volume keep their exact shipped
+type and pixels.
+
+**拉丁字形换成内置的 MiSans Latin**（三字重，约 166KB，随客户端包内嵌，Apache-2.0）；中文继续用
+用户自己的字体设置。字重、字距与 tabular 数字只作用于霓虹，其余三套配色保持原样。
+
+![Neon scanline over the hero](docs/shots/neon-scanline.jpg)
+
 ## Sidebar type scale
 
 Since 0.1.9 the left rail keeps its 100% width and its text is set at **125%** (14px → 17.5px)
