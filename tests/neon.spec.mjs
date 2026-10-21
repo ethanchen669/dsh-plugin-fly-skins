@@ -99,14 +99,20 @@ test('the MiSans stack is scoped to neon and falls back to the user font for CJK
   }
 })
 
-test('HUD type treatment borrows weight and spacing without uppercase', () => {
+test('HUD type treatment borrows weight and spacing; uppercase only on the workspace badge', () => {
   assert.match(css, /html\[data-fly-palette='neon'\] button,[\s\S]*?font-weight:\s*600;/u)
   assert.match(css, /html\[data-fly-palette='neon'\] \[class\*='_panelTitle'\][\s\S]*?letter-spacing:\s*0\.04em;/u)
   assert.match(css, /html\[data-fly-palette='neon'\] \[class\*='_sectionLabel'\]\s*\{[^}]*font-weight:\s*500;/u)
-  // The sidebar is 17.5px and has three icon buttons to its right. Uppercasing
-  // WORKSPACES there clipped the last glyph in the mock round; the approved
-  // treatment deliberately uses weight, not case.
-  assert.equal(css.includes('text-transform'), false, 'the neon type treatment must not uppercase or otherwise transform case')
+  // The section label stays un-transformed: at 17.5px with three icon buttons
+  // to its right, uppercasing WORKSPACES clipped the last glyph in the mock
+  // round. The one approved uppercase surface is the workspace folder badge,
+  // which has its own 14px row (B); assert the count and its home.
+  assert.equal([...css.matchAll(/text-transform:\s*[a-z]+/gu)].length, 1,
+    'only the workspace folder badge may transform case')
+  const badgeAt = css.indexOf("[class*='projectRow']")
+  const badgeEnd = css.indexOf("html[data-fly-palette='neon'] [class$='_frame']", badgeAt)
+  assert.match(css.slice(badgeAt, badgeEnd), /text-transform:\s*uppercase;/u,
+    'the one uppercase rule must be the workspace folder badge')
 })
 
 test('the scanline is a running-gated center-column background with motion guards', () => {
@@ -149,18 +155,20 @@ test('the scanline is a running-gated center-column background with motion guard
     'the light half must keep the approved static field')
 })
 
-test('the sidebar workspace folder row is separated from session rows', () => {
+test('the sidebar workspace folder row is a HUD badge and session rows stay untouched', () => {
   const at = css.indexOf("[class*='projectRow']")
   assert.ok(at !== -1, 'the workspace projectRow hook is missing')
   const end = css.indexOf("html[data-fly-palette='neon'] [class$='_frame']", at)
   assert.ok(end > at, 'could not delimit the projectRow block')
   const block = css.slice(at, end)
-  assert.match(block, /box-shadow:\s*inset 2px 0 0 var\(--dsw-specific-fly-accent\);/u,
-    'the workspace folder must carry the 2px inset accent bar (C)')
-  assert.match(block, /\[class\*='projectRow'\] \[class\*='_title'\][\s\S]*?color:\s*var\(--dsw-specific-fly-accent\);[\s\S]*?font-weight:\s*600;/u,
-    'the workspace folder title must be accent gold 600 (A)')
-  assert.match(block, /letter-spacing:\s*0\.03em;/u,
-    'the workspace folder title keeps the approved tracking')
+  assert.match(block, /\[class\*='projectRow'\] \[class\*='_title'\][\s\S]*?color:\s*var\(--dsw-specific-fly-pending\);[\s\S]*?font-size:\s*13px;[\s\S]*?font-weight:\s*600;[\s\S]*?letter-spacing:\s*0\.12em;[\s\S]*?text-transform:\s*uppercase;/u,
+    'the workspace folder must be the 13px uppercase pending-cyan HUD badge (B)')
+  assert.match(block, /\[class\*='projectRow'\]::after[\s\S]*?background:\s*linear-gradient\(90deg,[\s\S]*?--dsw-specific-fly-pending[\s\S]*?70%/u,
+    'the workspace row must carry the trailing pending-cyan rule')
+  assert.equal(block.includes('box-shadow: inset 2px'), false,
+    'the A+C gold bar must be gone from the B implementation')
+  assert.equal(block.includes('background-color: color-mix'), false,
+    'the A+C gold plate must be gone from the B implementation')
   assert.equal(block.includes('sessionRow'), false,
     'the workspace rule must not style session rows; sessions keep their own ink and weight')
 })

@@ -87,29 +87,36 @@ type and pixels.
 
 ![Neon scanline while a turn is running (fixture)](docs/shots/neon-scanline.jpg)
 
-## Sidebar workspace hierarchy (0.2.5)
+## Sidebar workspace hierarchy (0.2.6)
 
 All four palettes used to paint the workspace folder name with the same
 `--dsw-alias-label-primary` ink and 14px type as the session rows. Once the
 sidebar type grew to 17.5px, a folder wedged between the previous workspace's
 last session and its own first session had no cue but the small folder glyph.
 
-The folder is now a gold tab: `--dsw-specific-fly-accent` (bright `#ffb020` in
-dark, deep `#a34a06` at 5.1:1 on white in light), weight 600, 0.03em tracking,
-an 8% accent plate, a 2px inset accent bar and a 4/9/9/4 tab radius. Session rows
-are untouched — same ink, weight, pill and selected treatment. The rule keys on
-the upstream `projectRow` / `_title` / `_folder` local hooks (never a hash) and
-is shared by solid, glass, volume and neon.
+The B treatment makes the folder a **HUD badge**: pending cyan (`#35d3e0` dark /
+`#0f6f7d` light), 13px, weight 600, 0.12em tracking, uppercase Latin, with the
+folder icon in the same cyan and a 1px trailing gradient rule. 13px is
+deliberate: 14px clipped `DEFAULT WORKSPACE` to `DEFAULT WORKSP…` in the 280px
+rail, so the badge keeps the full label while still sitting one step below the
+17.5px session rows. The row keeps upstream's plate/radius/hover; the A+C gold
+plate and bar are gone. Sessions are untouched — 17.5px, white 400, pill
+selected. Chinese names do not uppercase; cyan, tracking and the rule carry the
+cue. The rule keys on the upstream `projectRow` / `_title` / `_folder` local
+hooks and is shared by solid, glass, volume and neon.
 
 **四个主题的左侧会话栏原先都把工作区文件夹名画成和会话行同一个
 `--dsw-alias-label-primary` / 14px**；侧栏字号抬到 17.5px 后，夹在上一个
-工作区会话尾部和本工作区会话头部之间的文件夹名只剩一个小图标可辨。现在工作区
-行是一只金色 tab：accent（深色 #ffb020 / 浅色 #a34a06，白底 5.1:1）+ 600 字重
-+ 0.03em 字距 + 8% 金底板 + 2px inset 金条 + 4/9/9/4 tab 圆角。会话行一个字
-都不动（墨色、字重、胶囊选中态全部保留），规则认上游 `projectRow` / `_title` /
-`_folder` 局部名，四个 palette 共用。
+工作区会话尾部和本工作区会话头部之间的文件夹名只剩一个小图标可辨。B 把
+工作区行做成**青色 HUD 标牌**：pending 青（深色 #35d3e0 / 浅色 #0f6f7d）、
+13px、600、0.12em 字距、英文大写，文件夹图标同青色，右侧一条 1px 渐隐细线。
+**13px 是有意的**：14px 会把 `DEFAULT WORKSPACE` 截成 `DEFAULT WORKSP…`
+（280px 轨道实测），所以保留完整标签，只比 17.5px 的会话行低一档。行的底板/
+圆角/hover 交还上游，A+C 的金底板和金条已撤；会话行一个字都不动（17.5px
+白字 400、胶囊选中态）。中文没有大小写，靠青色、字距和细线区分。规则认上游
+`projectRow` / `_title` / `_folder` 局部名，四个 palette 共用。
 
-![Workspace folder rows vs session rows (mock: A's gold + C's bar)](docs/shots/sidebar-workspace-type.jpg)
+![Workspace folder HUD badge in the real sidebar](docs/shots/sidebar-workspace-type.jpg)
 
 ## Sidebar type scale
 
