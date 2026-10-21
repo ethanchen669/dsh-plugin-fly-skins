@@ -7,9 +7,10 @@ works, and a 125% sidebar type scale.**
 `@dsh-fly/dsh-plugin-fly-skins` · category **theme** · MIT
 
 > Previews below are the **official DeepSeek Harness UI with this skin installed** — no Fly
-> workbench, fresh profile, no session list. That is what you get from `dsh plugin add`.
-> 下面的预览图是**官方 DeepSeek Harness UI + 本皮肤**（没有 Fly 工作台、全新 profile、
-> 不含任何会话列表），也就是你 `dsh plugin add` 之后看到的样子。
+> workbench, a fresh profile. The workspaces and sessions shown are **sample data**
+> (`atlas-web` / `billing-api` / `infra-notes`); no real conversations appear.
+> 下面的预览图是**官方 DeepSeek Harness UI + 本皮肤**（没有 Fly 工作台、全新 profile）；
+> 侧栏里的工作区与会话是**示例数据**（atlas-web / billing-api / infra-notes），不含任何真实会话。
 
 ## Neon — the flagship palette
 
@@ -20,7 +21,7 @@ stays sharp over the field. Dark and light are two halves of the same recipe, no
 **霓虹是主打配色**：整窗一张场景光场（深蓝画布 + 46px 电路网格）、栏卡外溢青光、
 文字坐字座；明暗两半是同一套配方的两个半区，不是两套主题。
 
-![Neon, dark, on the official UI](docs/shots/official-neon-dark.jpg)
+![Neon, dark, on the official UI](docs/shots/preview-neon-dark.jpg)
 
 ### Laser scan while the model works
 
@@ -62,7 +63,7 @@ tabular, and timestamps/counts switch to the mono stack.
 | --- | --- | --- | --- |
 | **Solid** | `solid` | Opaque panels, crisp borders | You want a flat, high-contrast room |
 
-![Solid, dark, on the official UI](docs/shots/official-solid-dark.jpg)
+![Solid, dark, on the official UI](docs/shots/preview-solid-dark.jpg)
 | **Glass** | `glass` | Translucent frosted surfaces, hairline edges | You want depth without colour |
 | **Volume** | `volume` | Glass volume + state glow + text plates | You want the lit, sculpted read |
 | **Neon** | `neon` | Scene light field + edge glow + text plates + running scan | You want the battle-room look (default in dsh-fly) |
