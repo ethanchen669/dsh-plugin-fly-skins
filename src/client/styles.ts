@@ -995,26 +995,29 @@ html[data-fly-palette='neon'] [class*='centerCol']  {
    线画在中列根节点的 background 上，也就是消息与卡片的**下面** —— 它扫过文字时
    不会糊字。只做深色半区：浅色白底上扫线会显脏；prefers-reduced-motion 与小屏
    一律关闭。
+   2026-10-21 用户真机判词：太粗，而且和 Todo 卡边框的青光不是一个颜色。修法：
+   线拆成 1px 实心层，颜色直接取 Todo 卡同款的 --dsw-specific-fly-glow-ring；
+   尾迹也用同一颗 token 的 color-mix，不再自造 175,248,255 / 53,211,224。尾迹从
+   220px 收到 48px、亮度压到 6%→18%，读起来是发丝而不是光带。
    选择器与上面「中列/右列 _root 退成透明」那条同形，但只取 centerCol；声明在
    后面，所以它盖过同一元素上的 background-image: none。 */
 html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class$='_root']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root ']),
 html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class*='_root ']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root '])  {
-  background-image: linear-gradient(180deg,
-    rgba(53, 211, 224, 0) 0%,
-    rgba(53, 211, 224, 0) 44%,
-    rgba(53, 211, 224, 0.018) 68%,
-    rgba(53, 211, 224, 0.07) 86%,
-    rgba(90, 225, 245, 0.22) 96.5%,
-    rgba(175, 248, 255, 0.58) 99.4%,
-    rgba(175, 248, 255, 0) 100%);
-  background-size: 100% 220px;
-  background-repeat: no-repeat;
-  background-position: 0 -240px;
+  background-image:
+    linear-gradient(180deg, var(--dsw-specific-fly-glow-ring), var(--dsw-specific-fly-glow-ring)),
+    linear-gradient(180deg,
+      transparent 0%,
+      color-mix(in srgb, var(--dsw-specific-fly-glow-ring) 6%, transparent) 45%,
+      color-mix(in srgb, var(--dsw-specific-fly-glow-ring) 12%, transparent) 78%,
+      color-mix(in srgb, var(--dsw-specific-fly-glow-ring) 18%, transparent) 100%);
+  background-size: 100% 1px, 100% 48px;
+  background-repeat: no-repeat, no-repeat;
+  background-position: 0 -1px, 0 -48px;
   animation: fly-neon-scan 16s linear infinite;
 }
 @keyframes fly-neon-scan {
-  0%, 7% { background-position: 0 -240px; }
-  93%, 100% { background-position: 0 calc(100% + 20px); }
+  0%, 7% { background-position: 0 -1px, 0 -48px; }
+  93%, 100% { background-position: 0 calc(100% + 2px), 0 calc(100% + 2px); }
 }
 @media (prefers-reduced-motion: reduce) {
   html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class$='_root']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root ']),

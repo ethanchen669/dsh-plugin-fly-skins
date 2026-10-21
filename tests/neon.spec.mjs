@@ -114,9 +114,16 @@ test('the scanline is a center-column background layer with motion guards', () =
   const firstCenterRule = css.indexOf("html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol']")
   assert.ok(firstCenterRule !== -1, 'the neon dark center root rule is missing')
   assert.ok(scan > firstCenterRule, 'the scan must be declared after the transparent-center rule so it wins by order')
-  assert.match(css, /background-image:\s*linear-gradient\(180deg,[\s\S]*?animation:\s*fly-neon-scan 16s linear infinite;/u)
-  assert.match(css, /@keyframes fly-neon-scan\s*\{[\s\S]*?0%,\s*7%[\s\S]*?93%,\s*100%/u,
+  assert.match(css, /background-image:\s*linear-gradient\(180deg, var\(--dsw-specific-fly-glow-ring\), var\(--dsw-specific-fly-glow-ring\)\),/u,
+    'the scan line must be a solid layer using the same ring token as the Todo card border')
+  assert.match(css, /background-size:\s*100% 1px, 100% 48px;/u,
+    'the line must be 1px and the tail 48px: the 220px tail is the "too thick" the user saw')
+  assert.match(css, /background-position:\s*0 -1px, 0 -48px;/u,
+    'the 1px line and the 48px tail must start aligned just above the column')
+  assert.match(css, /@keyframes fly-neon-scan\s*\{[\s\S]*?0%,\s*7%[\s\S]*?93%,\s*100%[\s\S]*?calc\(100% \+ 2px\), 0 calc\(100% \+ 2px\)/u,
     'the one-way scan must hold offscreen at both ends so the restart is invisible')
+  assert.equal(css.includes('175, 248, 255'), false,
+    'the old pale 175,248,255 scan core must be gone: it read as a different colour from the Todo glow')
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)\s*\{[\s\S]*?animation:\s*none;[\s\S]*?background-image:\s*none;/u,
     'reduced-motion must stop and remove the scan')
   assert.match(css, /@media \(max-width: 768px\)\s*\{[\s\S]*?animation:\s*none;[\s\S]*?background-image:\s*none;/u,
