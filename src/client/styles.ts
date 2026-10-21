@@ -1100,6 +1100,32 @@ html[data-fly-palette='neon'] [class*='_meta']  {
   font-size: 17.5px;
   line-height: 1.4;
 }
+
+/* 工作区文件夹名 vs 会话行（2026-10-21 用户裁决：A 的颜色 + C 的色条）。
+   上游 Rows.module.css 的 .projectRow 与 .sessionRow 里的 .title 都吃
+   --dsw-alias-label-primary / 14px；侧栏字号统一到 17.5px 后，文件夹名夹在
+   上一工作区会话尾部和本工作区会话头部之间，只能靠小文件夹图标辨认。
+   这里只动工作区行：accent 金色 600 + 低 alpha 金色底板 + 2px inset 金条
+   + 左侧收成 tab 圆角；会话行一个字都不动（选中卡、滚动遮罩、时间戳照旧）。
+   accent 在 solid / glass / volume / neon 的深浅半区都有值（#ffb020 /
+   #a34a06）；浅色半区是深金，白底 5.1:1，和 mock 的浅色块一致。 */
+html[data-fly-palette] [class*='projectRow']  {
+  border-radius: 4px 9px 9px 4px;
+  background-color: color-mix(in srgb, var(--dsw-specific-fly-accent) 8%, transparent);
+  box-shadow: inset 2px 0 0 var(--dsw-specific-fly-accent);
+}
+html[data-fly-palette] [class*='projectRow']:hover,
+html[data-fly-palette] [class*='projectRow'][class*='menuOpen']  {
+  background-color: color-mix(in srgb, var(--dsw-specific-fly-accent) 13%, transparent);
+}
+html[data-fly-palette] [class*='projectRow'] [class*='_title']  {
+  color: var(--dsw-specific-fly-accent);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+html[data-fly-palette] [class*='projectRow'] [class*='_folder']  {
+  color: var(--dsw-specific-fly-accent);
+}
 html[data-fly-palette='neon'] [class$='_frame']:not([data-sidebar-collapsed]) > [class*='sidebarCol']  {
   margin: 12px;
   border-radius: 16px;

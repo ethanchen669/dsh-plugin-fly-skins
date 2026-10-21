@@ -149,6 +149,22 @@ test('the scanline is a running-gated center-column background with motion guard
     'the light half must keep the approved static field')
 })
 
+test('the sidebar workspace folder row is separated from session rows', () => {
+  const at = css.indexOf("[class*='projectRow']")
+  assert.ok(at !== -1, 'the workspace projectRow hook is missing')
+  const end = css.indexOf("html[data-fly-palette='neon'] [class$='_frame']", at)
+  assert.ok(end > at, 'could not delimit the projectRow block')
+  const block = css.slice(at, end)
+  assert.match(block, /box-shadow:\s*inset 2px 0 0 var\(--dsw-specific-fly-accent\);/u,
+    'the workspace folder must carry the 2px inset accent bar (C)')
+  assert.match(block, /\[class\*='projectRow'\] \[class\*='_title'\][\s\S]*?color:\s*var\(--dsw-specific-fly-accent\);[\s\S]*?font-weight:\s*600;/u,
+    'the workspace folder title must be accent gold 600 (A)')
+  assert.match(block, /letter-spacing:\s*0\.03em;/u,
+    'the workspace folder title keeps the approved tracking')
+  assert.equal(block.includes('sessionRow'), false,
+    'the workspace rule must not style session rows; sessions keep their own ink and weight')
+})
+
 test('the composed stylesheet is structurally balanced', () => {
   const opens = [...css].filter(char => char === '{').length
   const closes = [...css].filter(char => char === '}').length

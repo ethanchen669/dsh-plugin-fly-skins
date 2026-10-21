@@ -139,7 +139,7 @@ changes arrive as PRs). `dsh-fly` finds it through its own `plugins.lock.json`:
 
 ```jsonc
 // dsh-fly/plugins.lock.json
-{ "plugins": { "@dsh-fly/dsh-plugin-fly-skins": { "repo": "…", "version": "0.2.4", "path": "dsh-plugin-fly-skins", "sha": "…" } } }
+{ "plugins": { "@dsh-fly/dsh-plugin-fly-skins": { "repo": "…", "version": "0.2.5", "path": "dsh-plugin-fly-skins", "sha": "…" } } }
 ```
 
 | What that side does | Through what |
