@@ -35,13 +35,15 @@ gone the moment the turn settles — idle reading never gets a moving line. Off 
 线挂在引擎自己的运行标记（`data-chat-running`）上——模型一停就消失，静态翻阅时不扫；
 `prefers-reduced-motion` 与 ≤768px 下关闭。
 
-预览图是一次**真实的示例任务**（`todo_write` 列三步、每步跑一句 `echo "step N done"`）
-进行中拍的：展开的那张命令卡是第一步的 bash 调用与输出，输入框上方就是那条扫描线。
-The frame is a real capture of a harmless three-step example task in progress
-(`todo_write` + one `echo` per step): the expanded card is step 1's command and output, and the
-line above the composer is the scan. It is sample content, not the owner's conversations.
+预览图是一次**真实的示例任务**（`todo_write` 列出五步、每步跑一句 `echo "step N done"`）
+进行中拍的：底部是**展开的 todo 卡**（准备 ✓ / 实现 ◐ / 写测试 · 跑验证 · 总结 待处理），
+中间是**展开的命令卡**（第一步的 bash 调用与输出），两者之间那条青线就是扫描线。
+The frame is a real capture of a harmless five-step example task in progress
+(`todo_write` + one `echo` per step): the todo card at the bottom is expanded (one done, one in
+progress, three pending), the command card in the middle is step 1's `bash` call and output, and
+the line between them is the scan. It is sample content, not the owner's conversations.
 
-![A three-step example task running: the expanded command card and the scan line](docs/shots/preview-neon-dark-running.jpg)
+![A five-step example task running: the expanded todo card, the expanded command card and the scan line](docs/shots/preview-neon-dark-tasks.jpg)
 
 ### Sidebar as a HUD
 
@@ -122,7 +124,7 @@ type and pixels.
 **拉丁字形换成内置的 MiSans Latin**（三字重，约 166KB，随客户端包内嵌，Apache-2.0）；中文继续用
 用户自己的字体设置。字重、字距与 tabular 数字只作用于霓虹，其余三套配色保持原样。
 
-![A three-step example task running: the expanded command card and the scan line](docs/shots/preview-neon-dark-running.jpg)
+![A five-step example task running: the expanded todo card, the expanded command card and the scan line](docs/shots/preview-neon-dark-tasks.jpg)
 
 ## Sidebar workspace hierarchy (0.2.6)
 
