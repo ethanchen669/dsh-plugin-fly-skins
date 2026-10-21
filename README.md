@@ -37,8 +37,8 @@ gone the moment the turn settles — idle reading never gets a moving line. Off 
 
 预览图是一次**真实的示例任务**（`todo_write` 列出五步、每步跑一句 `echo "step N done"`）
 进行中拍的：底部是**展开的 todo 卡**（准备 ◐ / 实现 · / 写测试 · / 跑验证 · / 总结 ·），
-中间上方是**展开的命令卡**（第一步的 bash 调用与输出），横贯画面的那条青光就是扫描线
-（它是 16 秒一程的动画，抓帧时停在可见的中段）。
+中间上方是**展开的命令卡**（第一步的 bash 调用与输出），todo 卡**上方那条空带里**
+横贯画面的青光就是扫描线（16 秒一程的动画，抓帧时停在空带里，不压任何文字）。
 The frame is a real capture of a harmless five-step example task in progress
 (`todo_write` + one `echo` per step): the todo card at the bottom is expanded (one done, one in
 progress, three pending), the command card in the middle is step 1's `bash` call and output, and
