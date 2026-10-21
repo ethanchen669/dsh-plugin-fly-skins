@@ -6,6 +6,11 @@ works, and a 125% sidebar type scale.**
 
 `@dsh-fly/dsh-plugin-fly-skins` · category **theme** · MIT
 
+> Previews below are the **official DeepSeek Harness UI with this skin installed** — no Fly
+> workbench, fresh profile, no session list. That is what you get from `dsh plugin add`.
+> 下面的预览图是**官方 DeepSeek Harness UI + 本皮肤**（没有 Fly 工作台、全新 profile、
+> 不含任何会话列表），也就是你 `dsh plugin add` 之后看到的样子。
+
 ## Neon — the flagship palette
 
 A scene light field behind the whole window: deep navy canvas, a 46px circuit grid running edge
@@ -15,7 +20,7 @@ stays sharp over the field. Dark and light are two halves of the same recipe, no
 **霓虹是主打配色**：整窗一张场景光场（深蓝画布 + 46px 电路网格）、栏卡外溢青光、
 文字坐字座；明暗两半是同一套配方的两个半区，不是两套主题。
 
-![Neon — dark / light](docs/shots/neon-dark-light.jpg)
+![Neon, dark, on the official UI](docs/shots/official-neon-dark.jpg)
 
 ### Laser scan while the model works
 
@@ -29,7 +34,7 @@ gone the moment the turn settles — idle reading never gets a moving line. Off 
 线挂在引擎自己的运行标记（`data-chat-running`）上——模型一停就消失，静态翻阅时不扫；
 `prefers-reduced-motion` 与 ≤768px 下关闭。
 
-![Laser scan, running vs idle](docs/shots/neon-scan.jpg)
+![Laser scan while a turn is running (official UI, running marker stamped)](docs/shots/official-neon-dark-running.jpg)
 
 ### Sidebar as a HUD
 
@@ -51,23 +56,13 @@ tabular, and timestamps/counts switch to the mono stack.
 **字体**：拉丁用内置的 MiSans Latin（约 166KB，Apache-2.0，三档字重），中文回落到你自己的
 字体设置；按钮与面板标题 600 + 0.04em，section 标签 500，数字等宽，时间戳/计数走等宽字体。
 
-In a running session (the todo panel is live, so the cyan ring on it is real):
-
-![Neon in a session](docs/shots/conversation-neon-dark.jpg)
-
-Settings dialog, both halves:
-
-| neon · dark | neon · light |
-| --- | --- |
-| ![settings dark](docs/shots/settings-neon-dark.jpg) | ![settings light](docs/shots/settings-neon-light.jpg) |
-
 ## Four palettes
-
-![solid / glass / volume / neon](docs/shots/palettes-2x2.jpg)
 
 | Palette | id | Look | Pick it when |
 | --- | --- | --- | --- |
 | **Solid** | `solid` | Opaque panels, crisp borders | You want a flat, high-contrast room |
+
+![Solid, dark, on the official UI](docs/shots/official-solid-dark.jpg)
 | **Glass** | `glass` | Translucent frosted surfaces, hairline edges | You want depth without colour |
 | **Volume** | `volume` | Glass volume + state glow + text plates | You want the lit, sculpted read |
 | **Neon** | `neon` | Scene light field + edge glow + text plates + running scan | You want the battle-room look (default in dsh-fly) |
@@ -86,7 +81,7 @@ caches client bundles in-process, so a page refresh is not enough.
 
 Once installed, the palette picker appears as its own row in **Settings → General**:
 
-![the palette row](docs/shots/settings-neon-dark.jpg)
+![The Skin row in Settings → General (official UI)](docs/shots/official-neon-dark-settings.jpg)
 
 It works standalone: install the skin without the Fly workbench and you get the official UI in
 Fly colours; install the workbench without the skin and you get the official look plus the
@@ -120,7 +115,7 @@ type and pixels.
 **拉丁字形换成内置的 MiSans Latin**（三字重，约 166KB，随客户端包内嵌，Apache-2.0）；中文继续用
 用户自己的字体设置。字重、字距与 tabular 数字只作用于霓虹，其余三套配色保持原样。
 
-![Neon scanline while a turn is running (fixture)](docs/shots/neon-scanline.jpg)
+![Neon scanline while a turn is running (running marker stamped on the official UI)](docs/shots/official-neon-dark-running.jpg)
 
 ## Sidebar workspace hierarchy (0.2.6)
 
@@ -151,7 +146,7 @@ hooks and is shared by solid, glass, volume and neon.
 白字 400、胶囊选中态）。中文没有大小写，靠青色、字距和细线区分。规则认上游
 `projectRow` / `_title` / `_folder` 局部名，四个 palette 共用。
 
-![Workspace folder HUD badge in the real sidebar](docs/shots/sidebar-workspace-type.jpg)
+![Workspace folder HUD badge in the official sidebar](docs/shots/official-sidebar.jpg)
 
 ## Sidebar type scale
 

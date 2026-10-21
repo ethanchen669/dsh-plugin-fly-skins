@@ -79,18 +79,24 @@ in the bundle banner against the current `src/`, so forgetting the build goes **
 
 ### Palette screenshots
 
-The screenshots in `docs/shots/` are captured from a **real engine + real browser** run
-(1440 wide @ DPR 2), not mocked up. The script lives in the `dsh-fly` repo because it installs the
-workbench and the skin together:
+The README previews in `docs/shots/official-*.jpg` show the **official UI with only this skin
+installed** — no workbench, a fresh scratch home, no session list (the owner's ruling: a market
+preview must show what a user gets from `dsh plugin add`, and must not leak real conversations).
+They are captured from a real engine + real browser (1440 @ DPR 2) by a script in the `dsh-fly`
+repo:
 
 ```bash
 cd ../dsh-fly
-node scripts/capture-skin-shots.mjs ../dsh-plugins/dsh-plugin-fly-skins/docs/shots
+node scripts/capture-official-skin-shots.mjs ../dsh-plugins/dsh-plugin-fly-skins/docs/shots
 ```
 
-It boots a scratch `DSH_HOME`, installs `dsh-plugin-fly-shell` + this package + `dsh-plugin-fly-console`,
-dismisses the first-run dialogs, walks all four palettes × both schemes through the skin's own settings
-row and writes `settings-<palette>-<scheme>.jpg` / `home-<palette>-<scheme>.jpg`.
+It boots a scratch `DSH_HOME` with the default web profile, installs **only** this package,
+switches to `neon` / `solid` × dark through the skin's own settings row, and writes
+`official-<palette>-dark.jpg` (+ `-settings`, plus a running-state frame with the upstream
+`data-chat-running` marker stamped on the real chat root, and a sidebar crop).
+
+`scripts/capture-skin-shots.mjs` in the same repo is the *workbench* variant (all four palettes ×
+both schemes, with `dsh-plugin-fly-shell` installed) — useful for the Fly app, not for the market.
 
 Trying it on a real harness (use a scratch profile, not the one you work in):
 
