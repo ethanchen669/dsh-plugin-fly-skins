@@ -114,14 +114,18 @@ test('the scanline is a center-column background layer with motion guards', () =
   const firstCenterRule = css.indexOf("html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol']")
   assert.ok(firstCenterRule !== -1, 'the neon dark center root rule is missing')
   assert.ok(scan > firstCenterRule, 'the scan must be declared after the transparent-center rule so it wins by order')
-  assert.match(css, /background-image:\s*linear-gradient\(180deg, var\(--dsw-specific-fly-glow-ring\), var\(--dsw-specific-fly-glow-ring\)\),/u,
-    'the scan line must be a solid layer using the same ring token as the Todo card border')
+  assert.match(css, /linear-gradient\(180deg,\s*rgba\(53, 211, 224, 0\.78\),/u,
+    'the scan line must use the Todo task-list panel\'s T10 ring colour, rgba(53,211,224,.78)')
   assert.match(css, /background-size:\s*100% 1px, 100% 48px;/u,
     'the line must be 1px and the tail 48px: the 220px tail is the "too thick" the user saw')
-  assert.match(css, /background-position:\s*0 -1px, 0 -48px;/u,
-    'the 1px line and the 48px tail must start aligned just above the column')
-  assert.match(css, /@keyframes fly-neon-scan\s*\{[\s\S]*?0%,\s*7%[\s\S]*?93%,\s*100%[\s\S]*?calc\(100% \+ 2px\), 0 calc\(100% \+ 2px\)/u,
-    'the one-way scan must hold offscreen at both ends so the restart is invisible')
+  assert.match(css, /background-position:\s*0 calc\(100% \+ 2px\), 0 calc\(100% \+ 49px\);/u,
+    'the 1px line and the 48px tail must start below the column (bottom-to-top motion)')
+  assert.match(css, /@keyframes fly-neon-scan\s*\{[\s\S]*?0%,\s*7%[\s\S]*?calc\(100% \+ 2px\), 0 calc\(100% \+ 49px\)[\s\S]*?93%,\s*100%[\s\S]*?0 -49px, 0 -49px/u,
+    'the scan must start at the bottom, end above the top, and hold offscreen at both ends')
+  assert.equal(css.includes('rgba(53, 211, 224, 0.14) 0%'), true,
+    'the tail must be brightest at the line and fade downward: upward motion trails below')
+  assert.equal(css.includes('transparent 100%)'), true,
+    'the tail must end transparent so its exit at the top is invisible')
   assert.equal(css.includes('175, 248, 255'), false,
     'the old pale 175,248,255 scan core must be gone: it read as a different colour from the Todo glow')
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)\s*\{[\s\S]*?animation:\s*none;[\s\S]*?background-image:\s*none;/u,

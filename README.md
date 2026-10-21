@@ -57,16 +57,17 @@ It works standalone: install the skin without the Fly workbench and you get the 
 Fly colours; install the workbench without the skin and you get the official look plus the
 workbench.
 
-## Neon scanline and typography (0.2.0, refined in 0.2.1)
+## Neon scanline and typography (0.2.0, refined through 0.2.2)
 
-The neon dark half carries a slow **one-way scanline**: a **1px** laser using the same
-`--dsw-specific-fly-glow-ring` as the Todo card's cyan border, with a 48px tail, painted
-on the centre column's background — i.e. *behind* messages and cards, so it never washes over text.
-It sweeps for about 16 seconds, holds offscreen at both ends, and restarts invisibly. The light half
+The neon dark half carries a slow **bottom-to-top scanline**: a **1px** laser in the Todo task-list
+panel's cyan-green, `rgba(53, 211, 224, 0.78)` (the T10 ring; `#35d3e0`), with a 48px tail that
+trails below the line, painted on the centre column's background — i.e. *behind* messages and
+cards, so it never washes over text. It sweeps upward for about 16 seconds, holds offscreen at
+both ends, and restarts invisibly. The light half
 does not scan (a moving line on a white field reads as dirt), and the layer is removed entirely under
 `prefers-reduced-motion: reduce` and on screens at or below 768px.
 
-**霓虹深色半区新增一条单向扫描线**：1px 激光（与 Todo 卡边框同一颗青光 token）+ 48px 柔尾迹，画在中列背景、消息与卡片的**下面**；
+**霓虹深色半区新增一条自下而上的扫描线**：1px 激光，颜色取 Todo 任务列表卡 T10 边框的 `rgba(53,211,224,.78)`（#35d3e0，青光绿），+ 48px 柔尾迹（拖在线下方），画在中列背景、消息与卡片的**下面**；
 约 16 秒扫完一程，两端在屏外静默后重播。浅色半区不扫（白底上会显脏），
 `prefers-reduced-motion` 与 ≤768px 小屏自动关闭。
 
