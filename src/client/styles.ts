@@ -1006,6 +1006,8 @@ html[data-fly-palette='neon'] [class*='centerCol']  {
    --dsw-specific-fly-glow-ring 77,208,255（sidebar 卡与 running 状态用的蓝）。
    这里线与尾迹直接使用 T10 的同一个字面值 rgba(53, 211, 224, …)；线的 alpha
    对齐 T10 的 78%。T10 自己写的也是字面值，直接抄它才能保证两边永远同色。
+   厚度裁决（2026-10-21）：1px 被用户判太细，1.5px 仍偏细，最终取 2px；
+   尾迹保持 48px，近线端 18%，让 2px 在 1x 屏上也有重量（2x 屏为 4 设备像素）。
    选择器与上面「中列/右列 _root 退成透明」那条同形，但只取 centerCol；声明在
    后面，所以它盖过同一元素上的 background-image: none。 */
 html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class$='_root']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root ']),
@@ -1013,18 +1015,18 @@ html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [cla
   background-image:
     linear-gradient(180deg, rgba(53, 211, 224, 0.78), rgba(53, 211, 224, 0.78)),
     linear-gradient(180deg,
-      rgba(53, 211, 224, 0.14) 0%,
-      rgba(53, 211, 224, 0.09) 22%,
-      rgba(53, 211, 224, 0.04) 55%,
+      rgba(53, 211, 224, 0.18) 0%,
+      rgba(53, 211, 224, 0.11) 22%,
+      rgba(53, 211, 224, 0.05) 55%,
       transparent 100%);
-  background-size: 100% 1px, 100% 48px;
+  background-size: 100% 2px, 100% 48px;
   background-repeat: no-repeat, no-repeat;
-  background-position: 0 calc(100% + 2px), 0 calc(100% + 49px);
+  background-position: 0 calc(100% + 2px), 0 calc(100% + 48px);
   animation: fly-neon-scan 16s linear infinite;
 }
 @keyframes fly-neon-scan {
-  0%, 7% { background-position: 0 calc(100% + 2px), 0 calc(100% + 49px); }
-  93%, 100% { background-position: 0 -49px, 0 -49px; }
+  0%, 7% { background-position: 0 calc(100% + 2px), 0 calc(100% + 48px); }
+  93%, 100% { background-position: 0 -50px, 0 -50px; }
 }
 @media (prefers-reduced-motion: reduce) {
   html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class$='_root']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root ']),

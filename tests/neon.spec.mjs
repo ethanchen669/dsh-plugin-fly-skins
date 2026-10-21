@@ -116,13 +116,13 @@ test('the scanline is a center-column background layer with motion guards', () =
   assert.ok(scan > firstCenterRule, 'the scan must be declared after the transparent-center rule so it wins by order')
   assert.match(css, /linear-gradient\(180deg,\s*rgba\(53, 211, 224, 0\.78\),/u,
     'the scan line must use the Todo task-list panel\'s T10 ring colour, rgba(53,211,224,.78)')
-  assert.match(css, /background-size:\s*100% 1px, 100% 48px;/u,
-    'the line must be 1px and the tail 48px: the 220px tail is the "too thick" the user saw')
-  assert.match(css, /background-position:\s*0 calc\(100% \+ 2px\), 0 calc\(100% \+ 49px\);/u,
-    'the 1px line and the 48px tail must start below the column (bottom-to-top motion)')
-  assert.match(css, /@keyframes fly-neon-scan\s*\{[\s\S]*?0%,\s*7%[\s\S]*?calc\(100% \+ 2px\), 0 calc\(100% \+ 49px\)[\s\S]*?93%,\s*100%[\s\S]*?0 -49px, 0 -49px/u,
+  assert.match(css, /background-size:\s*100% 2px, 100% 48px;/u,
+    'the line must be 2px and the tail 48px: 1px and 1.5px were the "too thin" the user saw')
+  assert.match(css, /background-position:\s*0 calc\(100% \+ 2px\), 0 calc\(100% \+ 48px\);/u,
+    'the 2px line and the 48px tail must start below the column (bottom-to-top motion)')
+  assert.match(css, /@keyframes fly-neon-scan\s*\{[\s\S]*?0%,\s*7%[\s\S]*?calc\(100% \+ 2px\), 0 calc\(100% \+ 48px\)[\s\S]*?93%,\s*100%[\s\S]*?0 -50px, 0 -50px/u,
     'the scan must start at the bottom, end above the top, and hold offscreen at both ends')
-  assert.equal(css.includes('rgba(53, 211, 224, 0.14) 0%'), true,
+  assert.equal(css.includes('rgba(53, 211, 224, 0.18) 0%'), true,
     'the tail must be brightest at the line and fade downward: upward motion trails below')
   assert.equal(css.includes('transparent 100%)'), true,
     'the tail must end transparent so its exit at the top is invisible')
