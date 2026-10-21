@@ -109,11 +109,18 @@ test('HUD type treatment borrows weight and spacing without uppercase', () => {
   assert.equal(css.includes('text-transform'), false, 'the neon type treatment must not uppercase or otherwise transform case')
 })
 
-test('the scanline is a center-column background layer with motion guards', () => {
+test('the scanline is a running-gated center-column background with motion guards', () => {
   const scan = css.indexOf('@keyframes fly-neon-scan')
   const firstCenterRule = css.indexOf("html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol']")
   assert.ok(firstCenterRule !== -1, 'the neon dark center root rule is missing')
   assert.ok(scan > firstCenterRule, 'the scan must be declared after the transparent-center rule so it wins by order')
+  const runningGate = css.indexOf(':has([data-chat-running])', firstCenterRule)
+  assert.ok(runningGate !== -1, 'the scan must be gated on the upstream running-status marker')
+  const gatedRule = css.slice(runningGate, scan)
+  assert.match(gatedRule, /background-image:\s*linear-gradient\(180deg,\s*rgba\(53, 211, 224, 0\.78\),/u,
+    'the line and animation must live inside the :has([data-chat-running]) rule, not on an idle root')
+  assert.match(gatedRule, /animation:\s*fly-neon-scan 16s linear infinite;/u,
+    'the scan animation must be mounted with the running marker')
   assert.match(css, /linear-gradient\(180deg,\s*rgba\(53, 211, 224, 0\.78\),/u,
     'the scan line must use the Todo task-list panel\'s T10 ring colour, rgba(53,211,224,.78)')
   assert.match(css, /background-size:\s*100% 2px, 100% 48px;/u,

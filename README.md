@@ -57,19 +57,23 @@ It works standalone: install the skin without the Fly workbench and you get the 
 Fly colours; install the workbench without the skin and you get the official look plus the
 workbench.
 
-## Neon scanline and typography (0.2.0, refined through 0.2.2)
+## Neon scanline and typography (0.2.0, refined through 0.2.4)
 
 The neon dark half carries a slow **bottom-to-top scanline**: a **2px** laser in the Todo task-list
 panel's cyan-green, `rgba(53, 211, 224, 0.78)` (the T10 ring; `#35d3e0`), with a 48px tail that
 trails below the line, painted on the centre column's background — i.e. *behind* messages and
 cards, so it never washes over text. It sweeps upward for about 16 seconds, holds offscreen at
-both ends, and restarts invisibly. The light half
-does not scan (a moving line on a white field reads as dirt), and the layer is removed entirely under
-`prefers-reduced-motion: reduce` and on screens at or below 768px.
+both ends, and restarts invisibly. The layer is mounted **only while a turn is running**: the rule
+is chained to the upstream `[data-chat-running]` row that React mounts for the active turn and
+unmounts when the model stops. Idle conversations and the home therefore stay still — the scan is a
+"working" signal, not a screensaver. The light half does not scan (a moving line on a white field
+reads as dirt), and the layer is removed entirely under `prefers-reduced-motion: reduce` and on
+screens at or below 768px.
 
 **霓虹深色半区新增一条自下而上的扫描线**：2px 激光，颜色取 Todo 任务列表卡 T10 边框的 `rgba(53,211,224,.78)`（#35d3e0，青光绿），+ 48px 柔尾迹（拖在线下方），画在中列背景、消息与卡片的**下面**；
-约 16 秒扫完一程，两端在屏外静默后重播。浅色半区不扫（白底上会显脏），
-`prefers-reduced-motion` 与 ≤768px 小屏自动关闭。
+约 16 秒扫完一程，两端在屏外静默后重播。**只在该会话 running 时挂载**：规则挂在上游
+`[data-chat-running]` 的运行状态行上，模型一停这行就卸载，线也一起消失；空闲会话和首页不扫。
+浅色半区不扫（白底上会显脏），`prefers-reduced-motion` 与 ≤768px 小屏自动关闭。
 
 The Latin chrome now uses **MiSans Latin** (three weights, about 166 KB, embedded in the client
 bundle, Apache-2.0; see `LICENSES/`). Buttons and panel titles take weight 600 and 0.04em tracking,
@@ -81,7 +85,7 @@ type and pixels.
 **拉丁字形换成内置的 MiSans Latin**（三字重，约 166KB，随客户端包内嵌，Apache-2.0）；中文继续用
 用户自己的字体设置。字重、字距与 tabular 数字只作用于霓虹，其余三套配色保持原样。
 
-![Neon scanline over the hero](docs/shots/neon-scanline.jpg)
+![Neon scanline while a turn is running (fixture)](docs/shots/neon-scanline.jpg)
 
 ## Sidebar type scale
 

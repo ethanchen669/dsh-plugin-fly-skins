@@ -1008,10 +1008,14 @@ html[data-fly-palette='neon'] [class*='centerCol']  {
    对齐 T10 的 78%。T10 自己写的也是字面值，直接抄它才能保证两边永远同色。
    厚度裁决（2026-10-21）：1px 被用户判太细，1.5px 仍偏细，最终取 2px；
    尾迹保持 48px，近线端 18%，让 2px 在 1x 屏上也有重量（2x 屏为 4 设备像素）。
+   运行态裁决（2026-10-21）：只在模型正在工作时扫；上游 ChatView 的
+   RunningStatus 只在会话 running 时挂载，并带 data-chat-running 标记。
+   规则用 :has([data-chat-running]) 把线挂在这个标记上；模型一停，标记
+   卸载，background-image 与 animation 同时消失，静态翻阅不扫。
    选择器与上面「中列/右列 _root 退成透明」那条同形，但只取 centerCol；声明在
    后面，所以它盖过同一元素上的 background-image: none。 */
-html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class$='_root']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root ']),
-html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class*='_root ']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root '])  {
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class$='_root']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root ']):has([data-chat-running]),
+html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class*='_root ']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root ']):has([data-chat-running])  {
   background-image:
     linear-gradient(180deg, rgba(53, 211, 224, 0.78), rgba(53, 211, 224, 0.78)),
     linear-gradient(180deg,
@@ -1029,15 +1033,15 @@ html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [cla
   93%, 100% { background-position: 0 -50px, 0 -50px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class$='_root']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root ']),
-  html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class*='_root ']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root '])  {
+  html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class$='_root']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root ']):has([data-chat-running]),
+  html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class*='_root ']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root ']):has([data-chat-running])  {
     animation: none;
     background-image: none;
   }
 }
 @media (max-width: 768px) {
-  html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class$='_root']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root ']),
-  html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class*='_root ']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root '])  {
+  html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class$='_root']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root ']):has([data-chat-running]),
+  html[data-fly-palette='neon'] body[data-ds-dark-theme] [class*='centerCol'] [class*='_root ']:not([class$='_root'] [class$='_root'], [class*='_root '] [class$='_root'], [class$='_root'] [class*='_root '], [class*='_root '] [class*='_root ']):has([data-chat-running])  {
     animation: none;
     background-image: none;
   }
