@@ -1,7 +1,8 @@
 # Fly Skins — palettes for the DeepSeek Harness web UI
 
-**A standard DSH skin plugin: four palettes, light and dark halves, plus a 125% sidebar type scale.**
-**标准 DSH 皮肤插件：四套配色（各含明暗两半），外加 125% 的侧栏字号。**
+**A standard DSH skin plugin: four palettes, light and dark halves, a laser scan while the model
+works, and a 125% sidebar type scale.**
+**标准 DSH 皮肤插件：四套配色（各含明暗两半）、模型运行时的激光扫描、外加 125% 的侧栏字号。**
 
 `@dsh-fly/dsh-plugin-fly-skins` · category **theme** · MIT
 
@@ -15,6 +16,40 @@ stays sharp over the field. Dark and light are two halves of the same recipe, no
 文字坐字座；明暗两半是同一套配方的两个半区，不是两套主题。
 
 ![Neon — dark / light](docs/shots/neon-dark-light.jpg)
+
+### Laser scan while the model works
+
+When a turn is running, a 2px cyan line sweeps bottom-to-top through the conversation column,
+trailing a 48px glow in the same cyan as the todo panel's ring. It is tied to the harness's own
+running marker (`data-chat-running`): the line exists only while the model is working and is
+gone the moment the turn settles — idle reading never gets a moving line. Off under
+`prefers-reduced-motion` and at ≤768px.
+
+**模型工作时才扫**：2px 的青线自下而上扫过中列，尾迹 48px、与 Todo 任务列表卡同一颗青。
+线挂在引擎自己的运行标记（`data-chat-running`）上——模型一停就消失，静态翻阅时不扫；
+`prefers-reduced-motion` 与 ≤768px 下关闭。
+
+![Laser scan, running vs idle](docs/shots/neon-scan.jpg)
+
+### Sidebar as a HUD
+
+Workspace folders are drawn as cyan HUD plates — uppercase, 13px, 600 weight, 0.12em tracking,
+a tinted plate and a 1px fading tail line — so a folder heading no longer reads as one more
+session row between two groups. Session rows keep the plain 17.5px white type and the pill
+selection; nothing about them moved.
+
+**侧栏做成 HUD**：工作区文件夹名是青色标牌（大写、13px、600、0.12em 字距、淡青底板 +
+1px 渐隐尾线），不再夹在两段会话中间像一条会话行；会话行一个字没动。
+
+### Type
+
+Latin is MiSans Latin, embedded (~166KB, Apache-2.0, three weights) so the chrome keeps its HUD
+voice offline; Chinese falls back to your own font setting, which the recipe deliberately keeps.
+Buttons and panel titles take 600 weight with 0.04em tracking, section labels 500, numerals are
+tabular, and timestamps/counts switch to the mono stack.
+
+**字体**：拉丁用内置的 MiSans Latin（约 166KB，Apache-2.0，三档字重），中文回落到你自己的
+字体设置；按钮与面板标题 600 + 0.04em，section 标签 500，数字等宽，时间戳/计数走等宽字体。
 
 In a running session (the todo panel is live, so the cyan ring on it is real):
 
@@ -35,7 +70,7 @@ Settings dialog, both halves:
 | **Solid** | `solid` | Opaque panels, crisp borders | You want a flat, high-contrast room |
 | **Glass** | `glass` | Translucent frosted surfaces, hairline edges | You want depth without colour |
 | **Volume** | `volume` | Glass volume + state glow + text plates | You want the lit, sculpted read |
-| **Neon** | `neon` | Scene light field + edge glow + text plates | You want the battle-room look (default in dsh-fly) |
+| **Neon** | `neon` | Scene light field + edge glow + text plates + running scan | You want the battle-room look (default in dsh-fly) |
 
 Every palette has a light and a dark half. The choice persists in the profile's patch layer
 (field `skin`), so it survives restarts and profile switches.
@@ -120,9 +155,9 @@ hooks and is shared by solid, glass, volume and neon.
 
 ## Sidebar type scale
 
-Since 0.1.9 the left rail keeps its 100% width and its text is set at **125%** (14px → 17.5px)
-in every palette, on both light and dark halves. The rail does not take part in window zoom, so
-the type stays the same size while the conversation area scales.
+The left rail keeps its 100% width and its text is set at **125%** (14px → 17.5px) in every
+palette, on both light and dark halves. The rail does not take part in window zoom, so the type
+stays the same size while the conversation area scales.
 
 ## Compatibility
 

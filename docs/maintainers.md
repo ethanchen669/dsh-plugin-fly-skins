@@ -115,6 +115,17 @@ tests/freshness.spec.mjs  staleness guard (is the bundle built from the current 
 lib/client.js             build artifact (`pnpm run build`, committed)
 ```
 
+## The neon extras (0.2.x)
+
+| Piece | Where | Notes |
+| --- | --- | --- |
+| Laser scan | `styles.ts` `:has([data-chat-running])` + `@keyframes fly-neon-scan` | 2px core + 48px trail in `rgba(53,211,224,.78)` (the todo panel's cyan); bottom→top; only while the harness mounts its running marker; disabled under `prefers-reduced-motion` and ≤768px |
+| HUD sidebar | `styles.ts` workspace-row rules | folder name: cyan plate, uppercase, 13px/600/0.12em + 1px fading tail; **13px is measured** — 14px clips `DEFAULT WORKSPACE` in the 280px track (`verify shell` has a `fits` assertion). Session rows untouched |
+| Type | `fonts.ts` + `styles.ts` neon block | MiSans Latin (3 weights, ~166KB, Apache-2.0, licence in `LICENSES/MiSans.txt`) with CJK falling back to `--dsh-font-family-text`; 600+0.04em on buttons/titles, 500 section labels, tabular numerals, mono for time/count/meta |
+
+The other three palettes stay pixel-frozen: all of the above is scoped to
+`html[data-fly-palette='neon']`.
+
 ## Rules when changing this package
 
 - **Hooks only use local class names / `data-*`** (`[class$='_X']`, `[class*='_X ']`, `[data-tool]`…);
