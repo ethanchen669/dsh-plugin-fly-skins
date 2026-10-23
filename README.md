@@ -16,7 +16,7 @@ while the model works, and a HUD sidebar.
 > 工作区/会话是示例或空白 profile 数据（示例名包括 `atlas-web` / `billing-api` / `infra-notes`），
 > 侧栏截图显示的是空白默认工作区；不含任何真实会话。
 
-![Neon, dark, on the official UI](docs/shots/preview-neon-dark.jpg)
+![Neon, dark, on the official UI](https://raw.githubusercontent.com/ethanchen669/dsh-plugin-fly-skins/main/docs/shots/preview-neon-dark.jpg)
 
 ## Four palettes
 
@@ -32,7 +32,7 @@ Every palette has a light and a dark half. The choice persists in the profile's 
 
 **四套配色各有明暗两半**，选择写进 profile 的 patch 层（`skin` 字段），重启和切换 profile 后保留。
 
-![Solid, dark, on the official UI](docs/shots/preview-solid-dark.jpg)
+![Solid, dark, on the official UI](https://raw.githubusercontent.com/ethanchen669/dsh-plugin-fly-skins/main/docs/shots/preview-solid-dark.jpg)
 
 ## Install
 
@@ -45,7 +45,7 @@ caches client bundles in-process, so a page refresh is not enough.
 
 Once installed, the palette picker appears as its own row in **Settings → General**:
 
-![The Skin row in Settings → General](docs/shots/official-neon-dark-settings.jpg)
+![The Skin row in Settings → General](https://raw.githubusercontent.com/ethanchen669/dsh-plugin-fly-skins/main/docs/shots/official-neon-dark-settings.jpg)
 
 It works standalone: install the skin without the Fly workbench and you get the official UI in
 Fly colours; install the workbench without the skin and you get the official look plus the
@@ -80,7 +80,7 @@ transparent gaps in text and surfaces; idle reading never gets a moving line. Of
 不盖字形，但会从文字/表面的透明缝隙透出来；静态翻阅不扫。`prefers-reduced-motion` 与 ≤768px
 下关闭。
 
-![A five-step example task running: the expanded todo card, the expanded command card and the scan line](docs/shots/preview-neon-dark-tasks.jpg)
+![A five-step example task running: the expanded todo card, the expanded command card and the scan line](https://raw.githubusercontent.com/ethanchen669/dsh-plugin-fly-skins/main/docs/shots/preview-neon-dark-tasks.jpg)
 
 ### HUD sidebar
 
@@ -96,7 +96,7 @@ step below the session type.
 17.5px 白字 400 + 胶囊选中态。13px 是有意的：14px 会把 `DEFAULT WORKSPACE` 截成
 `DEFAULT WORKSP…`（280px 轨道实测），所以保留完整标签，只比会话行低一档。
 
-![Workspace folder HUD badge in the official sidebar](docs/shots/official-sidebar.jpg)
+![Workspace folder HUD badge in the official sidebar](https://raw.githubusercontent.com/ethanchen669/dsh-plugin-fly-skins/main/docs/shots/official-sidebar.jpg)
 
 ### Type
 
@@ -141,7 +141,7 @@ service.
 
 Everything about building, the two contracts (boot marker and the `flySkins` service), the
 directory layout, the upstream-hook rules, how `dsh-fly` consumes this repo, and the release
-checklist lives in **[docs/maintainers.md](docs/maintainers.md)**.
+checklist lives in **[docs/maintainers.md](https://github.com/ethanchen669/dsh-plugin-fly-skins/blob/main/docs/maintainers.md)**.
 
 ```bash
 pnpm install
@@ -149,17 +149,17 @@ pnpm run verify     # build + typecheck + tests
 ```
 
 **开发**：构建、boot 标记与 `flySkins` 服务两条契约、目录、上游钩子规则、dsh-fly 如何消费本仓、
-发布清单都在 [docs/maintainers.md](docs/maintainers.md)；`pnpm run verify` 跑构建 + 类型 + 测试。
+发布清单都在 [docs/maintainers.md](https://github.com/ethanchen669/dsh-plugin-fly-skins/blob/main/docs/maintainers.md)；`pnpm run verify` 跑构建 + 类型 + 测试。
 
 ## Changelog
 
-See **[CHANGELOG.md](CHANGELOG.md)** — 0.2.6 is the first npm-published 0.2.x release (B HUD
-sidebar, running-only scan, MiSans Latin).
+See **[CHANGELOG.md](https://github.com/ethanchen669/dsh-plugin-fly-skins/blob/main/CHANGELOG.md)** — 0.2.7 is the current README/marketplace release; 0.2.6 was
+the first npm-published 0.2.x release (B HUD sidebar, running-only scan, MiSans Latin).
 
 ## License
 
-[MIT](LICENSE). MiSans Latin is Apache-2.0; see [LICENSES/](LICENSES/). First split out of the
+[MIT](https://github.com/ethanchen669/dsh-plugin-fly-skins/blob/main/LICENSE). MiSans Latin is Apache-2.0; see [LICENSES/](https://github.com/ethanchen669/dsh-plugin-fly-skins/tree/main/LICENSES/). First split out of the
 `dsh-fly` monorepo (`packages/dsh-plugin-fly-skins`); `scripts/build-client.mjs` and
 `scripts/lib/client-src-hash.mjs` are byte-identical copies, guarded by assertions on both sides.
 
-**许可**：MIT；MiSans Latin 为 Apache-2.0，见 [LICENSES/](LICENSES/)。
+**许可**：MIT；MiSans Latin 为 Apache-2.0，见 [LICENSES/](https://github.com/ethanchen669/dsh-plugin-fly-skins/tree/main/LICENSES/)。

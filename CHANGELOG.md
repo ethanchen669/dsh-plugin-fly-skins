@@ -2,6 +2,17 @@
 
 Released versions of `@dsh-fly/dsh-plugin-fly-skins`.
 
+## 0.2.7 — 2026-10-23
+
+Documentation and marketplace release; no runtime changes.
+
+- README: fixed the four-palette table, merged the duplicated scan/sidebar/type sections, corrected
+  the B sidebar description, qualified the 125% claim, and added a Data & network note.
+- Added `screenshots.json` (five GitHub-hosted images) for the dsh-market detail page.
+- Added this changelog; version-history prose moved out of the README.
+- README links and images now use absolute GitHub URLs so the npm package page renders them.
+- No change to the client bundle, manifest, or runtime behaviour.
+
 ## 0.2.6 — 2026-10-21
 
 First npm-published 0.2.x release (`v0.2.6`).
